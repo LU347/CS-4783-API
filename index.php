@@ -19,14 +19,14 @@
                             <h3>Search Equipment</h3>
                             <p><em>Search equipment by their device type, manufacturer, or serial number</em></p>
                             <a href="search.php">
-								<button name="search-button">Click Here</button>
+								<button name="search-button">Go to Search Page</button>
 							</a>
                         </div>
                         <div class="card">
                             <h3>Add Equipment</h3>
                             <p><em>Add equipment with a valid device type, manufacturer, and serial number</em></p>
                             <a href="add.php">
-								<button name="add-button">Click Here</button>
+								<button name="add-button">Go to Add Page</button>
 							</a>
                         </div>
                     </div>

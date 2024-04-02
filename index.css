@@ -66,6 +66,7 @@ h1 {
 }
 
 .parent {
+	margin: auto;
     margin-top: 50px;
     display: flex;
     justify-content: center;
@@ -91,6 +92,7 @@ form input[type=submit] {
 }
 
 .form-container {
+	width: 75%;
 	height: 100%;
 	padding: 3.125rem;
 	border-radius: 2rem;
