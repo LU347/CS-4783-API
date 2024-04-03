@@ -99,10 +99,12 @@
 			$dblink->query($sql) or
 				die("<p>Error occured with $sql<p>".$dblink->error);
 			header("Location index.php?msg=EquipmentAdded");
-			*/	
+			*/
+			redirect("index.php?msg=EquipmentAdded");
 		}
 		else
 		{
-			header("Location add.php?msg=DeviceExists");
+			//header("Location add.php?msg=DeviceExists");
+			redirect("add.php?msg=DeviceExists");
 		}
 	}
