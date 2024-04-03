@@ -14,6 +14,13 @@
         <main>
             <section class="home-page">
                 <div class="parent">
+					<?php
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "equipmentAdded")
+						{
+							//make alert css	
+							echo "<div class='parent'>Equipment successfully added</div>";		
+						}
+					?>
                     <div class="home-grid">
                         <div class="card">
                             <h3>Search Equipment</h3>

@@ -20,6 +20,7 @@
 					<?php
 						include("functions.php");
 						$dblink=db_connect("equipment");
+					
                         $devices_sql="SELECT `auto_id`, `device_type`  FROM `devices` WHERE `status` = 'ACTIVE'";
 						$devices_result = fetch_data($dblink, $devices_sql);
 						while ($devices_data = $devices_result->fetch_array(MYSQLI_ASSOC)) 
@@ -33,6 +34,12 @@
                         {
                             $manufacturers[$manu_data['auto_id']]=$manu_data['manufacturer'];
                         }
+						
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
+						{
+							//make alert css	
+							echo "<div class='parent'>Serial Number already exists</div>";		
+						}
 					?>
 					<div class="form-container">
 						<form method="post" action="">
@@ -57,11 +64,14 @@
 									}
 								?>
 							</select>
-
+							
 							<label for="serialNumber">Serial Number:</label>
 							<input type="text" id="serialNumber" name="serialNumber" placeholder="Format: SN-090912309asd"><br>
 							<input type="submit" value="SUBMIT" id="submit">
 						</form>
+						<div class="parent">
+							<p>[Submit button will be disabled until the reimport is done]</p>
+						</div>
 					</div>
                 </div>
 				<div class="parent">
@@ -71,3 +81,28 @@
         </main>
     </body>
 </html>
+<?php
+	if (isset($_POST['submit']))
+	{
+		$device = $_POST['device'];
+		$manufacturer = $_POST['manufacturer'];
+		$serialNumber = trim($_POST['serial']);
+		$sql = "SELECT `auto_id` FROM `serials` WHERE `serial_number`='$serialNumber'";
+		$result = $dblink->query($sql) or
+			die("<p>Error occured with $sql<p>".$dblink->error);
+		if ($result->num_rows<=0)
+		{
+			//not running this until the reimport is done
+			/*
+			$sql = "INSERT INTO `serials` (`device_id`, `manufacturer_id`, `serial_number`)
+					VALUES ('$device','$manufacturer', '$serialNumber')";
+			$dblink->query($sql) or
+				die("<p>Error occured with $sql<p>".$dblink->error);
+			header("Location index.php?msg=EquipmentAdded");
+			*/	
+		}
+		else
+		{
+			header("Location add.php?msg=DeviceExists");
+		}
+	}
