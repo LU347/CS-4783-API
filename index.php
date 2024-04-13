@@ -13,14 +13,14 @@
         </nav>
         <main>
             <section class="home-page">
-                <div class="parent">
-					<?php
-						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "equipmentAdded")
+				<?php
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
 						{
 							//make alert css	
-							echo "<div class='parent'>Equipment successfully added</div>";		
+							echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";		
 						}
 					?>
+                <div class="parent">
                     <div class="home-grid">
                         <div class="card">
                             <h3>Search Equipment</h3>

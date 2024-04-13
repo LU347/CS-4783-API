@@ -34,48 +34,45 @@
                         {
                             $manufacturers[$manu_data['auto_id']]=$manu_data['manufacturer'];
                         }
-						
-						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
-						{
-							//make alert css	
-							echo "<div class='parent'>Serial Number already exists</div>";		
-						}
 					?>
 					<div class="form-container">
-						<form method="post" action="">
+						<form method="POST" action="">
 							<label for="devices">Device Type:</label>
-							<select id="devices" name="devices">
+							<select name="device">
 								<option selected disabled>Choose Here</option>
 								<?php
 									foreach($devices as $key=>$value)
 									{
-										echo "<option value=" . $key . ">" . $value . "</option>";
+										echo '<option value="'.$key.'">'.$value.'</option>';
 									}
 								?>
 							</select>
 
 							<label for="manufacturer">Manufacturer:</label>
-							<select id="manufacturer" name="manufacturer">
+							<select name="manufacturer">
 								<option selected disabled>Choose Here</option>
 								<?php
 									foreach($manufacturers as $key=>$value)
 									{
-										echo "<option value=" . $key . ">" . $value . "</option>";
+										echo '<option value="'.$key.'">'.$value.'</option>';
 									}
 								?>
 							</select>
 							
 							<label for="serialNumber">Serial Number:</label>
-							<input type="text" id="serialNumber" name="serialNumber" placeholder="Format: SN-090912309asd"><br>
-							<input type="submit" value="SUBMIT" id="submit">
+							<input type="text" id="serialInput" name="serialNumber" placeholder="Format: SN-090912309asd"><br>
+							<button type="submit" value="submit" name="submit">Submit Equipment</button>
 						</form>
-						<div class="parent">
-							<p>[Submit button will be disabled until the reimport is done]</p>
-						</div>
 					</div>
                 </div>
 				<div class="parent">
-					<p class="error-box"></p>
+					<?php
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
+						{
+							//make alert css	
+							echo "<div class='parent'><div class='errorNotification'><p>Device already exists</div></div>";	
+						}
+					?>
 				</div>
             </section>
         </main>
@@ -86,25 +83,20 @@
 	{
 		$device = $_POST['device'];
 		$manufacturer = $_POST['manufacturer'];
-		$serialNumber = trim($_POST['serial']);
-		$sql = "SELECT `auto_id` FROM `serials` WHERE `serial_number`='$serialNumber'";
+		$serialNumber = trim($_POST['serialNumber']);
+		$sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number`='$serialNumber'";
 		$result = $dblink->query($sql) or
 			die("<p>Error occured with $sql<p>".$dblink->error);
 		if ($result->num_rows<=0)
 		{
-			//not running this until the reimport is done
-			/*
-			$sql = "INSERT INTO `serials` (`device_id`, `manufacturer_id`, `serial_number`)
-					VALUES ('$device','$manufacturer', '$serialNumber')";
+			$sql = "INSERT INTO `serial_numbers` (`device_id`, `manufacturer_id`, `serial_number`)
+					VALUES ('$device', '$manufacturer', '$serialNumber')";
 			$dblink->query($sql) or
 				die("<p>Error occured with $sql<p>".$dblink->error);
-			header("Location index.php?msg=EquipmentAdded");
-			*/
-			redirect("index.php?msg=EquipmentAdded");
+			header("Location: index.php?msg=EquipmentAdded");
 		}
 		else
 		{
-			//header("Location add.php?msg=DeviceExists");
-			redirect("add.php?msg=DeviceExists");
+			header("Location: add.php?msg=DeviceExists");
 		}
 	}
