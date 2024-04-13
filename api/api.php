@@ -11,6 +11,7 @@ $url=$_SERVER['REQUEST_URI'];
 $path = parse_url($url, PHP_URL_PATH);
 $pathComponents = explode("/", trim($path, "/"));
 $endPoint=$pathComponents[1];
+
 switch($endPoint)
 {
     case "add_equipment":
@@ -25,6 +26,9 @@ switch($endPoint)
 		break;
 	case "list_devices":
 		include("list_devices.php");
+		break;
+	case "list_manufacturers":
+		include("list_manufacturers.php");
 		break;
     default:
         header('Content-Type: application/json');

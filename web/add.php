@@ -18,27 +18,19 @@
 				</div>
                 <div class="parent">
 					<?php
-						include("functions.php");
-						$dblink=db_connect("equipment");
-					
-                        $devices_sql="SELECT `auto_id`, `device_type`  FROM `devices` WHERE `status` = 'ACTIVE'";
-						$devices_result = fetch_data($dblink, $devices_sql);
-						while ($devices_data = $devices_result->fetch_array(MYSQLI_ASSOC)) 
-                        {
-                            $devices[$devices_data['auto_id']]=$devices_data['device_type'];
-                        }
-					
-						$manu_sql = "SELECT `auto_id`, `manufacturer` FROM `manufacturers` WHERE `status` = 'ACTIVE'";
-						$manu_result = fetch_data($dblink, $manu_sql);
-						while ($manu_data = $manu_result->fetch_array(MYSQLI_ASSOC)) 
-                        {
-                            $manufacturers[$manu_data['auto_id']]=$manu_data['manufacturer'];
-                        }
+						include("../api/api_functions.php");
+						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_devices");
+						$resultsArray = json_decode($result, true);
+						$devices = get_msg_data($resultsArray);
+						
+						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_manufacturers");
+						$resultsArray = json_decode($result, true);
+						$manufacturers = get_msg_data($resultsArray);
 					?>
 					<div class="form-container">
 						<form method="POST" action="">
 							<label for="devices">Device Type:</label>
-							<select name="device">
+							<select name="device_id">
 								<option selected disabled>Choose Here</option>
 								<?php
 									foreach($devices as $key=>$value)
@@ -49,7 +41,7 @@
 							</select>
 
 							<label for="manufacturer">Manufacturer:</label>
-							<select name="manufacturer">
+							<select name="manufacturer_id">
 								<option selected disabled>Choose Here</option>
 								<?php
 									foreach($manufacturers as $key=>$value)
@@ -60,7 +52,7 @@
 							</select>
 							
 							<label for="serialNumber">Serial Number:</label>
-							<input type="text" id="serialInput" name="serialNumber" placeholder="Format: SN-090912309asd"><br>
+							<input type="text" id="serialInput" name="serial_number" placeholder="Format: SN-090912309asd"><br>
 							<button type="submit" value="submit" name="submit">Submit Equipment</button>
 						</form>
 					</div>
@@ -79,11 +71,18 @@
     </body>
 </html>
 <?php
+	include("../api/api_functions.php");
 	if (isset($_POST['submit']))
 	{
-		$device = $_POST['device'];
-		$manufacturer = $_POST['manufacturer'];
-		$serialNumber = trim($_POST['serialNumber']);
+		$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
+		$device = $_POST['device_id'];
+		$manufacturer = $_POST['manufacturer_id'];
+		$serialNumber = trim($_POST['serial_number']);
+		
+		$newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serialNumber=" . $serialNumber;
+		$result = call_api($newUrl);
+		echo $result;
+		/*
 		$sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number`='$serialNumber'";
 		$result = $dblink->query($sql) or
 			die("<p>Error occured with $sql<p>".$dblink->error);
@@ -99,4 +98,5 @@
 		{
 			header("Location: web/add.php?msg=DeviceExists");
 		}
+		*/
 	}

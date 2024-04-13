@@ -21,7 +21,6 @@ function handleError()
 	die();
 }
 */
-
 if ($device_id == NULL)
 {
 	header('Content-Type: application/json');
@@ -58,6 +57,15 @@ if ($serial_number == NULL)
 	die();
 }
 
+header('Content-Type: application/json');
+header('HTTP/1.1 200 OK');
+$output[]='Status: ERROR';
+$output[]='MSG: ' . 'deviceid=' . $device_id . 'manu_id:' . $manufacturer_id . 'serial:' . $serial_number;
+$output[]='Action: None';
+$responseData=json_encode($output);
+echo $responseData;
+
+/*
 $ch = curl_init("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number");
 $data="test";
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//ignore ssl
@@ -71,4 +79,8 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 $result=curl_exec($ch);
 curl_close($ch);
 $data=$json_decode($result);
+*/
+
+echo $result;
+die();
 ?>
