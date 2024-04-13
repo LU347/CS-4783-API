@@ -14,8 +14,18 @@ $endPoint=$pathComponents[1];
 switch($endPoint)
 {
     case "add_equipment":
+		$device_id = $_REQUEST['device_id'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$serial_number = $_REQUEST['serial_number'];
         include("add_equipment.php");
         break;
+	case "query_device":
+		break;
+	case "query_manufacturer":
+		break;
+	case "list_devices":
+		include("list_devices.php");
+		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');
