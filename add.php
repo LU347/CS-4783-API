@@ -1,7 +1,7 @@
 <!DOCTYPE html>
     <head>
         <title></title>
-        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="../index.css">
     </head>
     <body>
         <nav>
@@ -70,7 +70,7 @@
 						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
 						{
 							//make alert css	
-							echo "<div class='parent'><div class='errorNotification'><p>Device already exists</div></div>";	
+							echo "<div class='parent'><div class='errorNotification'><p>Serial number already exists</div></div>";	
 						}
 					?>
 				</div>
@@ -93,10 +93,10 @@
 					VALUES ('$device', '$manufacturer', '$serialNumber')";
 			$dblink->query($sql) or
 				die("<p>Error occured with $sql<p>".$dblink->error);
-			header("Location: index.php?msg=EquipmentAdded");
+			header("Location: web/index.php?msg=EquipmentAdded");
 		}
 		else
 		{
-			header("Location: add.php?msg=DeviceExists");
+			header("Location: web/add.php?msg=DeviceExists");
 		}
 	}
