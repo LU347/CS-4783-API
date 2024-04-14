@@ -57,9 +57,13 @@ if ($serial_number == NULL)
 	die();
 }
 
+/*
+	check error 
+*/
+
 header('Content-Type: application/json');
 header('HTTP/1.1 200 OK');
-$output[]='Status: ERROR';
+$output[]='Status: Success';
 $output[]='MSG: ' . 'deviceid=' . $device_id . 'manu_id:' . $manufacturer_id . 'serial:' . $serial_number;
 $output[]='Action: None';
 $responseData=json_encode($output);
@@ -80,7 +84,5 @@ $result=curl_exec($ch);
 curl_close($ch);
 $data=$json_decode($result);
 */
-
-echo $result;
 die();
 ?>

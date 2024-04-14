@@ -58,6 +58,9 @@
 					</div>
                 </div>
 				<div class="parent">
+					<em><a href="">Need to add a new device or manufacturer? Click here.</a></em>
+				</div>
+				<div class="parent">
 					<?php
 						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
 						{
@@ -67,36 +70,27 @@
 					?>
 				</div>
             </section>
-        </main>
+		</main>
     </body>
 </html>
 <?php
-	include("../api/api_functions.php");
 	if (isset($_POST['submit']))
 	{
 		$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
-		$device = $_POST['device_id'];
-		$manufacturer = $_POST['manufacturer_id'];
-		$serialNumber = trim($_POST['serial_number']);
+        $device = $_POST['device_id'];
+        $manufacturer = $_POST['manufacturer_id'];
+        $serialNumber = trim($_POST['serial_number']);
+
+        $newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serial_number=" . $serialNumber;
+        $result = call_api($newUrl);
+        $resultsArray = json_decode($result, true);
+        $tmp = $resultsArray[0];
+        $status = explode("Status:", $tmp);
+		$status[1] = trim($status[1]);
 		
-		$newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serialNumber=" . $serialNumber;
-		$result = call_api($newUrl);
-		echo $result;
-		/*
-		$sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number`='$serialNumber'";
-		$result = $dblink->query($sql) or
-			die("<p>Error occured with $sql<p>".$dblink->error);
-		if ($result->num_rows<=0)
-		{
-			$sql = "INSERT INTO `serial_numbers` (`device_id`, `manufacturer_id`, `serial_number`)
-					VALUES ('$device', '$manufacturer', '$serialNumber')";
-			$dblink->query($sql) or
-				die("<p>Error occured with $sql<p>".$dblink->error);
-			header("Location: web/index.php?msg=EquipmentAdded");
+		if (strcmp($status[1], "Success") == 0) {
+			header("Location: index.php?msg=EquipmentAdded");
+			exit();
 		}
-		else
-		{
-			header("Location: web/add.php?msg=DeviceExists");
-		}
-		*/
 	}
+?>

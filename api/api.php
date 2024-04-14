@@ -21,6 +21,8 @@ switch($endPoint)
         include("add_equipment.php");
         break;
 	case "query_device":
+		$device_id = $_REQUEST['device_id'];
+		include("query_device.php");
 		break;
 	case "query_manufacturer":
 		break;
