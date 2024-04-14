@@ -17,10 +17,18 @@ function call_api($url)
   return $result;
 }
 
+function get_msg_status($msg)
+{
+	$tmp = $msg[0];	//placeholder for the status row
+    $status = explode("Status:", $tmp); //explodes status to get the status variable
+	$status[1] = trim($status[1]); //this should get success or error
+	return $status[1];
+}
+
 function get_msg_data($msg) 
 {
-  $tmp = $msg[ 1 ];
+  $tmp = $msg[1];
   $payload_Data = explode( "MSG:", $tmp);
-  return json_decode( $payload_Data[ 1 ], true);
+  return json_decode( $payload_Data[1], true);
 }
 ?>
