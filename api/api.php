@@ -47,6 +47,12 @@ switch($endPoint)
 	case "list_manufacturers":
 		include("list_manufacturers.php");
 		break;
+	case "search_equipment":
+		$device_id = $_REQUEST['device_id'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$serial_number = $_REQUEST['serial_number'];
+		include("search_equipment.php");
+		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');

@@ -145,9 +145,22 @@ form input[type=submit] {
 	color: black;
 }
 
+.search-grid {
+	display: grid;
+	grid-template-columns: 45% 45%;
+	column-gap: 2.5%;
+	margin: 1.5rem;
+	justify-content: center;
+}
+
+.search-parent {
+	display: flex;
+	justify-content: center;
+}
+
  .container {
     display: flex;
-    justify-content: center;
+    align-items: center;
 	width: 100%;
 }
 

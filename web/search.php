@@ -14,13 +14,92 @@
         <main>
             <section class="search-page">
                 <div class="parent">
-                    <h1>WIP Search Page</h1>
+                    <h1>Search Equipment</h1>
                 </div>
-				<div class="container">
-						<form method="post" action="">
-							
-						</form>
+				<div class="search-parent">
+					<?php
+						include("../api/api_functions.php");
+						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_devices");
+						$resultsArray = json_decode($result, true);
+						$devices = get_msg_data($resultsArray);
+						
+						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_manufacturers");
+						$resultsArray = json_decode($result, true);
+						$manufacturers = get_msg_data($resultsArray);
+					?>
+					<div class="search-grid">
+						<div class="form-container">
+							<form method="POST" action="">
+								<label for="device_id">Device Type:</label><br>
+								<select name="device_id">
+									<option selected disabled>Choose Here</option>
+									<?php
+										foreach($devices as $key=>$value)
+										{
+											echo '<option value="'.$key.'">'.$value.'</option>';
+										}
+									?>
+								</select>
+								<label for="manufacturer_id">Manufacturer:</label><br>
+								<select name="manufacturer_id">
+									<option selected disabled>Choose Here</option>
+									<?php
+										foreach($manufacturers as $key=>$value)
+										{
+											echo '<option value="'.$key.'">'.$value.'</option>';
+										}
+									?>
+								</select>
+								<label for="serial_number">Serial Number:</label><br>
+								<input type="text" name="serial_number" placeholder="Format: SN-xxxxx..">
+								<button type="submit" value="submit-search" name="submit-search">Search</button>
+							</form>
+						</div>
+						<div class="form-container">
+							<form method="POST" action="">
+								<label for="device_id">Search by Device Type:</label>
+								<select name="device_id">
+									<option selected disabled>Choose Here</option>
+									<?php
+										foreach($devices as $key=>$value)
+										{
+											echo '<option value="'.$key.'">'.$value.'</option>';
+										}
+									?>
+								</select>
+								<button type="submit" value="submit-search-device" name="submit-search-device">Search Device</button>
+							</form>
+							<br>
+							<form method="POST" action="">
+								<label for="manufacturer_id">Search by Manufacturer:</label>
+								<select name="manufacturer_id">
+									<option selected disabled>Choose Here</option>
+									<?php
+										foreach($devices as $key=>$value)
+										{
+											echo '<option value="'.$key.'">'.$value.'</option>';
+										}
+									?>
+								</select>
+								<button type="submit" value="submit-search-manufacturer" name="submit-search-manufacturer">Search Manufacturer</button>
+							</form>
+							<br>
+							<form method="POST" action="">
+								<label for="serial_number">Search by Serial Number:</label>
+								<select name="serial_number">
+									<option selected disabled>Choose Here</option>
+									<?php
+										foreach($devices as $key=>$value)
+										{
+											echo '<option value="'.$key.'">'.$value.'</option>';
+										}
+									?>
+								</select>
+								<button type="submit" value="submit-search-serial" name="submit-search-serial">Search Serial Number</button>
+							</form>
+						</div>
 					</div>
+				</div>
             </section>
         </main>
     </body>
