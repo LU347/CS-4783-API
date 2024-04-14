@@ -26,13 +26,16 @@ switch($endPoint)
 		include("add_device.php");
 		break;
 	case "add_manufacturer":
-		$new_manufacturer = $_REQUEST['new_manufacturer'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		include("add_manufacturer.php");
 		break;
 	case "query_device":
 		$device_id = $_REQUEST['device_id'];
 		include("query_device.php");
 		break;
 	case "query_manufacturer":
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		include("query_manufacturer.php");
 		break;
 	case "query_serial_number":
 		$serial_number = $_REQUEST['serial_number'];

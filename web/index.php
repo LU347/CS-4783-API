@@ -23,6 +23,11 @@
                   {
                       echo "<div class='parent'><div class='successNotification'><p>Device successfully added!</div></div>";		
                   }
+				
+				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "ManufacturerAdded")
+                  {
+                      echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully added!</div></div>";		
+                  }
 				 ?>
                 <div class="parent">
                     <div class="home-grid">

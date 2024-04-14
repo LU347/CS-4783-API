@@ -73,7 +73,7 @@
 					</form>
 					<form method="POST" action="">
 						<label for="devices">New Manufacturer:</label>
-						<input type="text" name="new_device" placeholder="Example: Apple"><br>
+						<input type="text" name="new_manufacturer" placeholder="Example: Apple"><br>
 						<button type="submit" value="submit_new_manufacturer" name="submit_new_manufacturer">Submit</button>
 					</form>
 				</div>
@@ -167,5 +167,23 @@ if (isset($_POST['submit_new_device']))
 if (isset($_POST['submit_new_manufacturer']))
 {
 	$new_manufacturer = $_POST['new_manufacturer'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer_id=" . $new_manufacturer;
+	
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+	
+	$status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=ManufacturerAdded"); // change to device added
+        exit();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: add.php?msg=Error&val=$msg");
+    }
 }
 ?>

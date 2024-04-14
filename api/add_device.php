@@ -1,7 +1,7 @@
 <?php
 if ($device_id == NULL)
 {
-	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_device");
+	$responseData = create_header("ERROR", "Invalid or missing device ID", "add_device");
     echo $responseData;
 	die();
 }

@@ -7,7 +7,7 @@ try
 	$result = $dblink->query($sql);
 } catch (Exception $e) {
 	$responseData = create_header("ERROR", "Error with sql: $e", "query_device");
-	echo $e;
+	echo $responseData;
 	die();
 }
 
