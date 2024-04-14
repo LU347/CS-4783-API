@@ -30,7 +30,6 @@ body {
 
 nav {
     background-color: #212121;
-    font-size: large;
 	margin-bottom: 10px;
 	box-shadow: 0 0.5em 1em 0 rgba(0,0,0,.2);
 }
@@ -60,10 +59,18 @@ nav li a:hover {
 }
 
 h1 {
-	background-color: rgba(45, 45, 45, 0.702);
 	margin: 1px;
-	padding: 1rem;
+	padding: 0.5rem;
 	border-radius: 1rem;
+	color: white;
+	font-size: 2rem;/* From https://css.glass */
+	/* From https://css.glass */
+	background: rgba(2, 2, 2, 0.59);
+	border-radius: 16px;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(7.3px);
+	-webkit-backdrop-filter: blur(7.3px);
+	border: 1px solid rgba(2, 2, 2, 1);
 }
 
 .active-link {
@@ -102,6 +109,15 @@ form input[type=submit] {
 	padding: 3.125rem;
 	border-radius: 2rem;
 	background-color: rgba(45, 45, 45, 0.702);
+	border: 1px solid rgba(2, 2, 2, 1);
+}
+
+.new-form-container {
+	width: 100%;
+	margin: 0;
+	display: grid;
+	grid-template-columns: auto auto;
+	column-gap: 5%;
 }
 
 .home-grid {
@@ -110,9 +126,29 @@ form input[type=submit] {
     column-gap: 10%;
 }
 
-.container {
+.new-device-manu {
+	margin-top: 25px;
+	padding: 3.125rem;
+	background: rgba(2, 2, 2, 0.59);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(7.3px);
+	-webkit-backdrop-filter: blur(7.3px);
+	border: 1px solid rgba(2, 2, 2, 1);
+	height: 150px;
+}
+
+.new-device-manu-grid {
+	display: grid;
+	grid-template-columns: auto auto;
+	column-gap: 10px;
+	padding: 25px;
+	color: black;
+}
+
+ .container {
     display: flex;
     justify-content: center;
+	width: 100%;
 }
 
 .card {

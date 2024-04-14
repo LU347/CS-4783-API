@@ -58,8 +58,27 @@
 					</div>
                 </div>
 				<div class="parent">
-					<em><a href="">Need to add a new device or manufacturer? Click here.</a></em>
+					<div class="new-device-manu-grid">
+						<em>Need to add a new device or manufacturer?</em>
+						<button onclick="toggleNewForms()">Click Here to Add a New Device or Manufacturer</button>
+					</div>
 				</div>
+            </section>
+			<section class="new-device-manu" id="newForms" style="display: none">
+				<div class="new-form-container">
+					<form method="POST" action="">
+						<label for="devices">New Device:</label>
+						<input type="text" name="new_device" placeholder="Example: Computer"><br>
+						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
+					</form>
+					<form method="POST" action="">
+						<label for="devices">New Manufacturer:</label>
+						<input type="text" name="new_device" placeholder="Example: Apple"><br>
+						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
+					</form>
+				</div>
+			</section>
+			<section class="status-notifications">
 				<div class="parent">
 					<?php
 						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
@@ -78,8 +97,20 @@
 						}
 					?>
 				</div>
-            </section>
+			</section>
 		</main>
+		<script>
+			//https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+			function toggleNewForms() {
+				var newFormDiv = document.getElementById("newForms");
+				if (newFormDiv.style.display === "none") {
+					newFormDiv.style.display = "block";
+				} else {
+					newFormDiv.style.display = "none";
+				}
+			}
+			
+		</script>
     </body>
 </html>
 <?php

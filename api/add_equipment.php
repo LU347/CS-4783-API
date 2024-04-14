@@ -105,32 +105,4 @@ if (strcmp($status, "Success") == 0)
 	echo $responseData;
 	die();
 }
-//insert
-/*
-if (strcmp($status, "Success") == 0)
-{
-	header('Content-Type: application/json');
-	header('HTTP/1.1 200 OK');
-	$output[]='Status: Success';
-	$output[]='MSG: Equipment successfully added!';
-	$output[]='Action: add_equipment';
-	$output[] = $serial_query_result;
-	$responseData=json_encode($output);
-	echo $responseData;
-	die();
-}
-*/
-
-/*
-//success message
-header('Content-Type: application/json');
-header('HTTP/1.1 200 OK');
-$output[]='Status: Success';
-$output[]='MSG: ' . 'deviceid=' . $device_id . 'manu_id:' . $manufacturer_id . 'serial:' . $serial_number;
-$output[]='Action: None';
-$output[] = $serial_query_result;
-$responseData=json_encode($output);
-echo $responseData;
-die();
-*/
 ?>
