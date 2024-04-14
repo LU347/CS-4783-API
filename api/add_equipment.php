@@ -50,39 +50,87 @@ if ($serial_number == NULL)
 	header('Content-Type: application/json');
     header('HTTP/1.1 200 OK');
     $output[]='Status: ERROR';
-    $output[]='MSG: Invalid or missing serial number ID';
+    $output[]='MSG: Missing serial number ID';
     $output[]='Action: None';
     $responseData=json_encode($output);
     echo $responseData;
 	die();
 }
 
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $serial_number;
+$serial_query_result = call_api($url);
+
+$resultsArray = json_decode($serial_query_result, true); //turns result into array
+$status = trim(get_msg_status($resultsArray));
+$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+if (strcmp($status, "ERROR") == 0)
+{
+	header('Content-Type: application/json');
+    header('HTTP/1.1 200 OK');
+    $output[]='Status: ERROR';
+    $output[]='MSG: ' . $msg;
+    $output[]='Action: query_serial_number';
+    $responseData=json_encode($output);
+    echo $responseData;
+	die();
+} 
+
+$dblink = db_connect("equipment");
+
+if (strcmp($status, "Success") == 0)
+{
+	$sql = "INSERT INTO serial_numbers (device_id, manufacturer_id, serial_number) 
+	VALUES ('$device_id', '$manufacturer_id', '$serial_number')";
+	
+	try {
+		$result = $dblink->query($sql);
+	} catch(Exception $e)
+	{
+		header('Content-Type: application/json');
+    	header('HTTP/1.1 200 OK');
+    	$output[]='Status: ERROR';
+    	$output[]='MSG: Error with SQL ' . $e;
+    	$output[]='Action: add_equipment';
+    	$responseData=json_encode($output);
+    	echo $responseData;
+		die();
+	}
+	header('Content-Type: application/json');
+	header('HTTP/1.1 200 OK');
+	$output[]='Status: Success';
+	$output[]='MSG: Equipment successfully added!';
+	$output[]='Action: add_equipment';
+	$responseData=json_encode($output);
+	echo $responseData;
+	die();
+}
+//insert
 /*
-	check error 
+if (strcmp($status, "Success") == 0)
+{
+	header('Content-Type: application/json');
+	header('HTTP/1.1 200 OK');
+	$output[]='Status: Success';
+	$output[]='MSG: Equipment successfully added!';
+	$output[]='Action: add_equipment';
+	$output[] = $serial_query_result;
+	$responseData=json_encode($output);
+	echo $responseData;
+	die();
+}
 */
 
+/*
+//success message
 header('Content-Type: application/json');
 header('HTTP/1.1 200 OK');
 $output[]='Status: Success';
 $output[]='MSG: ' . 'deviceid=' . $device_id . 'manu_id:' . $manufacturer_id . 'serial:' . $serial_number;
 $output[]='Action: None';
+$output[] = $serial_query_result;
 $responseData=json_encode($output);
 echo $responseData;
-
-/*
-$ch = curl_init("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number");
-$data="test";
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//ignore ssl
-curl_setopt($ch, CURLOPT_POST,1);//tell curl we are using post
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//this is the data
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//prepare a response
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'content-type: application/x-www-form-urlencoded',
-    'content-length: '.strlen($data))
-            );
-$result=curl_exec($ch);
-curl_close($ch);
-$data=$json_decode($result);
-*/
 die();
+*/
 ?>

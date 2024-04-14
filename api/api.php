@@ -1,5 +1,6 @@
 <?php
 include("../functions.php");
+include("api_functions.php");
 /*$url=$_SERVER['REQUEST_URI'];
 header('Content-Type: application/json');
 header('HTTP/1.1 200 OK');
@@ -25,6 +26,10 @@ switch($endPoint)
 		include("query_device.php");
 		break;
 	case "query_manufacturer":
+		break;
+	case "query_serial_number":
+		$serial_number = $_REQUEST['serial_number'];
+		include("query_serial_number.php");
 		break;
 	case "list_devices":
 		include("list_devices.php");

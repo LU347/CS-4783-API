@@ -83,27 +83,31 @@
     </body>
 </html>
 <?php
-	if (isset($_POST['submit']))
-	{
-		$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
-        $device = $_POST['device_id'];
-        $manufacturer = $_POST['manufacturer_id'];
-        $serialNumber = trim($_POST['serial_number']);
+if (isset($_POST['submit']))
+{
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
+    $device = $_POST['device_id'];
+    $manufacturer = $_POST['manufacturer_id'];
+    $serialNumber = trim($_POST['serial_number']);
 
-        $newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serial_number=" . $serialNumber;	//concatenates args
-        $result = call_api($newUrl);	//calls add_equipment 
-        $resultsArray = json_decode($result, true); //turns result into array
-		$status = get_msg_status($resultsArray);
-  		$msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
-		
-		if (strcmp($status, "Success") == 0) {
-			header("Location: index.php?msg=EquipmentAdded");
-			exit();
-		}
-		
-		if (strcmp($status, "ERROR") == 0) {
-			header("Location: add.php?msg=Error&val=$msg");
-		}
-		//need to handle error
-	}
+    $newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serial_number=" . $serialNumber;	//concatenates args
+    $result = call_api($newUrl);	//calls add_equipment 
+    $resultsArray = json_decode($result, true); //turns result into array
+    $status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+    echo print_r($resultsArray);
+    echo $result;
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=EquipmentAdded");
+        exit();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: add.php?msg=Error&val=$msg");
+    }
+
+}
 ?>
