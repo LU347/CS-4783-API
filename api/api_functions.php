@@ -17,6 +17,17 @@ function call_api($url)
   return $result;
 }
 
+function create_header($status, $msg, $action)
+{
+	header('Content-Type: application/json');
+	header('HTTP/1.1 200 OK');
+	$output[] = 'Status: ' . $status;
+	$output[] = 'MSG: ' . $msg;
+	$output[] = 'Action: ' . $action;
+	$responseData = json_encode( $output );
+	return $responseData;
+}
+
 function get_msg_status($msg)
 {
 	$tmp = $msg[0];	//placeholder for the status row

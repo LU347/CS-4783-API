@@ -23,36 +23,21 @@ function handleError()
 */
 if ($device_id == NULL)
 {
-	header('Content-Type: application/json');
-    header('HTTP/1.1 200 OK');
-    $output[]='Status: ERROR';
-    $output[]='MSG: Invalid or missing device ID';
-    $output[]='Action: query_device';
-    $responseData=json_encode($output);
+	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_device");
     echo $responseData;
 	die();
 } 
 
 if ($manufacturer_id == NULL)
 {
-	header('Content-Type: application/json');
-    header('HTTP/1.1 200 OK');
-    $output[]='Status: ERROR';
-    $output[]='MSG: Invalid or missing manufacturer ID';
-    $output[]='Action: query_manufacturer';
-    $responseData=json_encode($output);
+	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_manufacturer");
     echo $responseData;
 	die();
 }
 
 if ($serial_number == NULL)
 {
-	header('Content-Type: application/json');
-    header('HTTP/1.1 200 OK');
-    $output[]='Status: ERROR';
-    $output[]='MSG: Missing serial number ID';
-    $output[]='Action: None';
-    $responseData=json_encode($output);
+	$responseData = create_header("ERROR", "Missing serial number ID", "None");
     echo $responseData;
 	die();
 }
@@ -66,12 +51,7 @@ $msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it
 
 if (strcmp($status, "ERROR") == 0)
 {
-	header('Content-Type: application/json');
-    header('HTTP/1.1 200 OK');
-    $output[]='Status: ERROR';
-    $output[]='MSG: ' . $msg;
-    $output[]='Action: query_serial_number';
-    $responseData=json_encode($output);
+	$responseData = create_header("ERROR", $msg, "query_serial_number");
     echo $responseData;
 	die();
 } 
@@ -85,24 +65,15 @@ if (strcmp($status, "Success") == 0)
 	
 	try {
 		$result = $dblink->query($sql);
-	} catch(Exception $e)
-	{
-		header('Content-Type: application/json');
-    	header('HTTP/1.1 200 OK');
-    	$output[]='Status: ERROR';
-    	$output[]='MSG: Error with SQL ' . $e;
-    	$output[]='Action: add_equipment';
-    	$responseData=json_encode($output);
+	} catch(Exception $e) {
+		$errorMsg = "Error with SQL" . $e;
+		$responseData = create_header("ERROR", $errorMsg, "add_equipment");
     	echo $responseData;
 		die();
 	}
-	header('Content-Type: application/json');
-	header('HTTP/1.1 200 OK');
-	$output[]='Status: Success';
-	$output[]='MSG: Equipment successfully added!';
-	$output[]='Action: add_equipment';
-	$responseData=json_encode($output);
+	$responseData = create_header("Success", "Equipment successfully added!", "add_equipment");
 	echo $responseData;
 	die();
 }
+$dblink->close();
 ?>

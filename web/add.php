@@ -68,13 +68,13 @@
 				<div class="new-form-container">
 					<form method="POST" action="">
 						<label for="devices">New Device:</label>
-						<input type="text" name="new_device" placeholder="Example: Computer"><br>
+						<input type="text" name="new_device_id" placeholder="Example: Computer"><br>
 						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
 					</form>
 					<form method="POST" action="">
 						<label for="devices">New Manufacturer:</label>
 						<input type="text" name="new_device" placeholder="Example: Apple"><br>
-						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
+						<button type="submit" value="submit_new_manufacturer" name="submit_new_manufacturer">Submit</button>
 					</form>
 				</div>
 			</section>
@@ -140,5 +140,32 @@ if (isset($_POST['submit']))
         header("Location: add.php?msg=Error&val=$msg");
     }
 
+}
+
+if (isset($_POST['submit_new_device']))
+{
+	$device_id = $_POST['new_device_id'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_id=" . $device_id;
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+	
+	$status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=DeviceAdded"); // change to device added
+        exit();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: add.php?msg=Error&val=$msg");
+    }
+}
+
+if (isset($_POST['submit_new_manufacturer']))
+{
+	$new_manufacturer = $_POST['new_manufacturer'];
 }
 ?>

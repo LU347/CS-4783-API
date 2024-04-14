@@ -14,12 +14,16 @@
         <main>
             <section class="home-page">
 				<?php
-						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
-						{
-							//make alert css	
-							echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";		
-						}
-					?>
+                  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
+                  {
+                      echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";		
+                  }
+				  
+                  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceAdded")
+                  {
+                      echo "<div class='parent'><div class='successNotification'><p>Device successfully added!</div></div>";		
+                  }
+				 ?>
                 <div class="parent">
                     <div class="home-grid">
                         <div class="card">

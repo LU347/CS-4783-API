@@ -21,6 +21,13 @@ switch($endPoint)
 		$serial_number = $_REQUEST['serial_number'];
         include("add_equipment.php");
         break;
+	case "add_device":
+		$device_id = $_REQUEST['device_id'];
+		include("add_device.php");
+		break;
+	case "add_manufacturer":
+		$new_manufacturer = $_REQUEST['new_manufacturer'];
+		break;
 	case "query_device":
 		$device_id = $_REQUEST['device_id'];
 		include("query_device.php");
