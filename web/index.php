@@ -9,6 +9,7 @@
                 <li><a href="">Home</a></li>
                 <li><a href="search.php">Search Equipment</a></li>
                 <li><a href="add.php">Add Equipment</a></li>
+				<li><a href="update.php">Update Equipment</a></li>
             </ul>
         </nav>
         <main>
@@ -43,6 +44,13 @@
                             <p><em>Add equipment with a valid device type, manufacturer, and serial number</em></p>
                             <a href="add.php">
 								<button name="add-button">Go to Add Page</button>
+							</a>
+                        </div>
+						<div class="card">
+                            <h3>Update Equipment</h3>
+                            <p><em>Update equipment with a valid device type, manufacturer, and serial number</em></p>
+                            <a href="update.php">
+								<button name="update-button">Go to Update Page</button>
 							</a>
                         </div>
                     </div>

@@ -124,6 +124,19 @@ form input[type=submit] {
     display: grid;
     grid-template-columns: auto auto;
     column-gap: 10%;
+	row-gap: 10%;
+}
+
+.update-home-grid {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 2.5%;
+	row-gap: 10%;
+}
+
+.update-home-page {
+	display: flex;
+	justify-content: center;
 }
 
 .new-device-manu {
@@ -134,7 +147,7 @@ form input[type=submit] {
 	backdrop-filter: blur(7.3px);
 	-webkit-backdrop-filter: blur(7.3px);
 	border: 1px solid rgba(2, 2, 2, 1);
-	height: 150px;
+	height: auto;
 }
 
 .new-device-manu-grid {
