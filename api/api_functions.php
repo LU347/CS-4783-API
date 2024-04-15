@@ -43,4 +43,11 @@ function get_msg_data($msg)
   $payload_Data = explode( "MSG:", $tmp);
   return json_decode( $payload_Data[1], true);
 }
+
+function get_data($msg)
+{
+  $tmp = $msg[3];
+  $payload_Data = explode("Data:", $tmp);
+  return json_decode( $payload_Data[1], true);
+}
 ?>

@@ -6,7 +6,7 @@ if ($device_id == NULL)
 	die();
 }
 
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?device_id=" . $device_id;
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?device_id=" . $device_id . "&method=check_device_duplicate";
 $result = call_api($url);
 $resultsArray = json_decode($result, true); //turns result into array
 $status = trim(get_msg_status($resultsArray));

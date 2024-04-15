@@ -169,8 +169,6 @@ form input[type=submit] {
 }
 
  .container {
-    display: flex;
-    align-items: center;
 	width: 100%;
 }
 

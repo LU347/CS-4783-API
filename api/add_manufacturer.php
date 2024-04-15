@@ -6,7 +6,7 @@ if ($manufacturer_id == NULL)
 	die();
 }
 
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?manufacturer_id=" . $manufacturer_id;
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?manufacturer_id=" . $manufacturer_id . "&method=check_manufacturer_duplicate";
 
 $result = call_api($url);
 $resultsArray = json_decode($result, true);

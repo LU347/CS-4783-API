@@ -28,7 +28,7 @@ if ($result->num_rows == 0) {
 	echo $responseData;
 	die();
 }
-$result->close();
+$dblink->close();
 
 
 ?>

@@ -31,10 +31,12 @@ switch($endPoint)
 		break;
 	case "query_device":
 		$device_id = $_REQUEST['device_id'];
+		$method = $_REQUEST['method'];
 		include("query_device.php");
 		break;
 	case "query_manufacturer":
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$method = $_REQUEST['method'];
 		include("query_manufacturer.php");
 		break;
 	case "query_serial_number":

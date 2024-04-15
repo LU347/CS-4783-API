@@ -56,6 +56,7 @@
 							<button type="submit" value="submit" name="submit">Submit Equipment</button>
 						</form>
 					</div>
+		
                 </div>
 				<div class="parent">
 					<div class="new-device-manu-grid">
@@ -71,6 +72,7 @@
 						<input type="text" name="new_device_id" placeholder="Example: Computer"><br>
 						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
 					</form>
+					
 					<form method="POST" action="">
 						<label for="devices">New Manufacturer:</label>
 						<input type="text" name="new_manufacturer" placeholder="Example: Apple"><br>
@@ -81,6 +83,7 @@
 			<section class="status-notifications">
 				<div class="parent">
 					<?php
+						ob_start();
 						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
 						{
 							//make alert css	
@@ -99,21 +102,12 @@
 				</div>
 			</section>
 		</main>
-		<script>
-			//https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-			function toggleNewForms() {
-				var newFormDiv = document.getElementById("newForms");
-				if (newFormDiv.style.display === "none") {
-					newFormDiv.style.display = "block";
-				} else {
-					newFormDiv.style.display = "none";
-				}
-			}
-			
-		</script>
     </body>
 </html>
 <?php
+ob_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 if (isset($_POST['submit']))
 {
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
@@ -130,58 +124,61 @@ if (isset($_POST['submit']))
     if (strcmp($status, "Success") == 0) 
     {
         header("Location: index.php?msg=EquipmentAdded");
-        exit();
+        die();
     }
 
     if (strcmp($status, "ERROR") == 0) 
     {
         header("Location: add.php?msg=Error&val=$msg");
+        die();
     }
 
 }
 
 if (isset($_POST['submit_new_device']))
 {
-	$device_id = $_POST['new_device_id'];
-	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_id=" . $device_id;
-	$result = call_api($url);
-	$resultsArray = json_decode($result, true);
-	
-	$status = get_msg_status($resultsArray);
+    $device_id = $_POST['new_device_id'];
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_id=" . $device_id;
+    $result = call_api($url);
+    $resultsArray = json_decode($result, true);
+
+    $status = get_msg_status($resultsArray);
     $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
 
     if (strcmp($status, "Success") == 0) 
     {
         header("Location: index.php?msg=DeviceAdded"); // change to device added
-        exit();
+        die();
     }
 
     if (strcmp($status, "ERROR") == 0) 
     {
         header("Location: add.php?msg=Error&val=$msg");
+        die();
     }
 }
 
 if (isset($_POST['submit_new_manufacturer']))
 {
-	$new_manufacturer = $_POST['new_manufacturer'];
-	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer_id=" . $new_manufacturer;
-	
-	$result = call_api($url);
-	$resultsArray = json_decode($result, true);
-	
-	$status = get_msg_status($resultsArray);
+    $new_manufacturer = $_POST['new_manufacturer'];
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer_id=" . $new_manufacturer;
+
+    $result = call_api($url);
+    $resultsArray = json_decode($result, true);
+
+    $status = get_msg_status($resultsArray);
     $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
 
     if (strcmp($status, "Success") == 0) 
     {
         header("Location: index.php?msg=ManufacturerAdded"); // change to device added
-        exit();
+        die();
     }
 
     if (strcmp($status, "ERROR") == 0) 
     {
         header("Location: add.php?msg=Error&val=$msg");
+        die();
     }
 }
 ?>

@@ -1,26 +1,4 @@
 <?php
-/*
-function handleError()
-{
-	header('Content-Type: application/json');
-    header('HTTP/1.1 200 OK');
-    $output[]='Status: ERROR';
-	
-	if ($device_id == NULL) 
-	{
-		$output[] = 'MSG: Invalid or missing device ID';
-		$output[] = 'Action: query_device';
-	}
-	if ($manufacturer_id == NULL)
-	{
-		    $output[]='MSG: Invalid or missing manufacturer ID';
-    		$output[]='Action: query_manufacturer';
-	}
-	$responseData = json_encode($output);
-	echo $responseData;
-	die();
-}
-*/
 if ($device_id == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_device", "");
