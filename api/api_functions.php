@@ -17,13 +17,14 @@ function call_api($url)
   return $result;
 }
 
-function create_header($status, $msg, $action)
+function create_header($status, $msg, $action, $data)
 {
 	header('Content-Type: application/json');
 	header('HTTP/1.1 200 OK');
 	$output[] = 'Status: ' . $status;
 	$output[] = 'MSG: ' . $msg;
 	$output[] = 'Action: ' . $action;
+	$output[] = 'Data: ' . $data; //optional?
 	$responseData = json_encode( $output );
 	return $responseData;
 }

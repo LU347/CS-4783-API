@@ -48,6 +48,7 @@ switch($endPoint)
 		include("list_manufacturers.php");
 		break;
 	case "search_equipment":
+		$search_by = $_REQUEST['search_by'];
 		$device_id = $_REQUEST['device_id'];
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
 		$serial_number = $_REQUEST['serial_number'];

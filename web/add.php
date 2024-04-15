@@ -126,8 +126,6 @@ if (isset($_POST['submit']))
     $resultsArray = json_decode($result, true); //turns result into array
     $status = get_msg_status($resultsArray);
     $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
-    echo print_r($resultsArray);
-    echo $result;
 
     if (strcmp($status, "Success") == 0) 
     {

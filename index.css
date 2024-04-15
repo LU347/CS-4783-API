@@ -158,6 +158,16 @@ form input[type=submit] {
 	justify-content: center;
 }
 
+.search-results-container {
+	width: 90%;
+	height: 500px;
+	background-color: rgba(45, 45, 45, 0.702);
+	margin: 20px;
+	display: flex;
+	align-content:center;
+	justify-content: center;
+}
+
  .container {
     display: flex;
     align-items: center;

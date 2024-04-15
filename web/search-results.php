@@ -12,8 +12,9 @@
             </ul>
         </nav>
         <main>
-            <section class="home-page">
+            <section class="search-results-page">
 				<?php
+					//get data payload here
                   if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
                   {
                       echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";		
@@ -32,6 +33,10 @@
                 <div class="parent">
                     <h1>Search Results</h1>
                 </div>
+				<div class="search-results-container">
+					Populate search results here, each having their own div?
+					<div class="container"></div>
+				</div>
             </section>
         </main>
     </body>

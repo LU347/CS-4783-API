@@ -104,3 +104,28 @@
         </main>
     </body>
 </html>
+<?php
+if (isset($_POST['submit-search-device']))
+{
+	$search_by = "device";
+	$device_id = $_POST['device_id'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
+	$result = call_api($url);
+	
+	$resultsArray = json_decode($result, true);
+	
+	$status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=ManufacturerAdded"); // change to device added
+        exit();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: add.php?msg=Error&val=$msg");
+    }
+}
+?>
