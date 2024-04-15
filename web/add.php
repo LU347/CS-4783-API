@@ -18,6 +18,7 @@
 				</div>
                 <div class="parent">
 					<?php
+						ob_start();
 						include("../api/api_functions.php");
 						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_devices");
 						$resultsArray = json_decode($result, true);
@@ -103,6 +104,18 @@
 			</section>
 		</main>
     </body>
+	<script>
+		//https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+		function toggleNewForms()
+		{
+			let div = document.getElementById("newForms");
+			if (div.style.display === "none") {
+				div.style.display = "block";
+			} else {
+				div.style.display = "none";
+			}
+		}
+	</script>
 </html>
 <?php
 ob_start();
