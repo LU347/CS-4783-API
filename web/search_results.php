@@ -17,14 +17,21 @@
                     <h1>Search Results</h1>
                 </div>
 				<div class="search-results-container">
-					Populate search results here, each having their own div?
 					<div class="container">
 						<?php
 						  ob_start();
-						  if (isset($_REQUEST['searchResults']))
+						  include("../api/api_functions.php");
+						  if (isset($_REQUEST['search_by']) && isset($_REQUEST['device_id']))
 						  {
-							  echo "<pre>";
-							  echo print_r($_REQUEST['data']);
+							  $search_by = $_REQUEST['search_by'];
+							  $device_id = $_REQUEST['device_id'];
+                              $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
+                              $result = call_api($url);
+                              $resultArray = json_decode($result, true);
+                              $status = get_msg_status($resultsArray);
+                              $data = get_data($resultArray);
+                              echo "<pre>";
+							  echo print_r($data);
 							  echo "</pre>";
 						  }
 						 ?>

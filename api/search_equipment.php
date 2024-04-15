@@ -53,7 +53,7 @@ if ($search_by == "device")
 		die();
 	}
 	
-	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 10";
+	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 10000";
 	
 	$dblink = db_connect("equipment"); //move
 	

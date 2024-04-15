@@ -160,7 +160,7 @@ form input[type=submit] {
 
 .search-results-container {
 	width: 90%;
-	height: 500px;
+	height: auto;
 	background-color: rgba(45, 45, 45, 0.702);
 	margin: 20px;
 	display: flex;
@@ -170,6 +170,14 @@ form input[type=submit] {
 
  .container {
 	width: 100%;
+}
+
+.scroll {
+	height: 50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: justify;
+	width: 90%;
 }
 
 .card {

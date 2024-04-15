@@ -19,6 +19,7 @@
                 
 				<div class="search-parent">
 					<?php
+					    ob_start();
 						include("../api/api_functions.php");
 						$result = call_api("https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/list_devices");
 						$resultsArray = json_decode($result, true);
@@ -94,53 +95,24 @@
 					</div>
 				</div>
             </section>
-		<div class="container">
-			<?php
-			if (isset($_POST['submit-search-device']))
-			{
-			  $search_by = "device";
-			  $device_id = $_POST['device_id'];
-			  $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
-			  $result = call_api($url);
-			  $resultsArray = json_decode($result, true); //turns result into array
-			  $status = get_msg_status($resultsArray);
-			  $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
-			  
-			  $data = get_data($resultsArray);
-			  $equipment = array();
-				foreach ($data as $key=>$value)
-				{
-					$row = explode(",", $value);
-					echo "<h1>";
-					echo $row[0] . ", " . $row[1] . ", " . $row[2];
-					echo "</h1>";
-				}
-			}
-			?>
-		</div>
         </main>
     </body>
 </html>
 <?php
+ob_start();
 if (isset($_POST['submit-search-device']))
 {
     $search_by = "device";
     $device_id = $_POST['device_id'];
+	/*
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
     $result = call_api($url);
     $resultArray = json_decode($result, true);
     $status = get_msg_status($resultsArray);
     $data = get_data($resultArray);
-    /*
-    $data = get_data($resultArray);
-    $equipment = array();
-    foreach ($data as $key=>$value)
-    {
-        $row = explode(",", $value);
-        echo "<h1>";
-        echo $row[0] . ", " . $row[1] . ", " . $row[2];
-        echo "</h1>";
-    }
-   	*/
+	$jsonData = json_encode($data);
+	*/
+	header("Location: search_results.php?search_by=$search_by&device_id=$device_id");
+	die();
 }	
 ?>
