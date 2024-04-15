@@ -97,6 +97,27 @@
 					
 				</div>
 			</section>
+			<section class="status-notifications">
+				<div class="parent">
+					<?php
+						ob_start();
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceExists")
+						{
+							//make alert css	
+							echo "<div class='parent'><div class='errorNotification'><p>Serial number already exists</div></div>";	
+						}
+					
+						if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "Error" && $_REQUEST['val'])
+						{
+							echo "<div class='parent'>";
+							echo "<div class='errorNotification'><p>";
+							echo $_REQUEST['val'];
+							echo "</p></div>";
+							echo "</div>";
+						}
+					?>
+				</div>
+			</section>
 		</main>
     </body>
 	<script>
@@ -138,7 +159,22 @@ if (isset($_POST['submit_new_device']))
 	$device_id = $_POST['device_id'];
 	$updated_str = $_POST['updated_str'];
 	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/update_device?device_id=" . $device_id . "&updated_str=" . $updated_str;
-	echo $url;
-	die();
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+
+    $status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=DeviceUpdated"); // change to device added
+        die();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: update.php?msg=Error&val=$msg");
+        die();
+    }
 }
 ?>

@@ -29,6 +29,11 @@
                   {
                       echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully added!</div></div>";		
                   }
+				
+				  if (isset($_REQUEST['msg']) && isset($_REQUEST['msg']) == "DeviceUpdated")
+				  {
+					  echo "<div class='parent'><div class='successNotification'><p>Device successfully updated!</div></div>";
+				  }
 				 ?>
                 <div class="parent">
                     <div class="home-grid">
