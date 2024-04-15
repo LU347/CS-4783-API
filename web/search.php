@@ -31,6 +31,7 @@
 					?>
 					<div class="search-grid">
 						<div class="form-container">
+							<h2><em>strict search so, device && manufacturer && serial</em></h2>
 							<form method="POST" action="">
 								<label for="device_id">Device Type:</label><br>
 								<select name="device_id">
@@ -98,6 +99,18 @@
         </main>
     </body>
 </html>
+<?php
+ob_start();
+if (isset($_POST['submit-search']))
+{
+    $search_by = "all";
+    $device_id = $_POST['device_id'];
+	$manufacturer_id = $_POST['manufacturer_id'];
+	$serial_number = $_POST['serial_number'];
+	header("Location: search_results.php?search_by=$search_by&device_id=$device_id&manufacturer_id=$manufacturer_id&serial_number=$serial_number");
+	die();
+}
+?>
 <?php
 ob_start();
 if (isset($_POST['submit-search-device']))

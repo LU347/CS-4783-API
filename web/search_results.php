@@ -62,6 +62,22 @@
                               echo print_r($data);
                               echo "</pre>";
                           }
+						
+                          if (isset($_REQUEST['search_by']) && isset($_REQUEST['serial_number']) && isset($_REQUEST['device_id']) && isset($_REQUEST['manufacturer_id']))
+                          {
+                              $search_by = $_REQUEST['search_by'];
+                              $serial_number = $_REQUEST['serial_number'];
+							  $device_id = $_REQUEST['device_id'];
+							  $manufacturer_id = $_REQUEST['manufacturer_id'];
+                              $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&serial_number=" . $serial_number . "&device_id=" . $device_id . "&manufacturer_id=" . $manufacturer_id;
+                              $result = call_api($url);
+                              $resultArray = json_decode($result, true);
+                              $status = get_msg_status($resultsArray);
+                              $data = get_data($resultArray);
+                              echo "<pre>";
+                              echo print_r($data);
+                              echo "</pre>";
+                          }
 						 ?>
 					</div>
 				</div>

@@ -265,7 +265,7 @@ if ($search_by == "all")
 		die();
 	}
 	
-	$sql = "SELECT * FROM serial_numbers WHERE device_id = " . $device_id . " AND manufacturer_id = " . $manufacturer_id . " AND serial_number LIKE '%" . $serial_number . "' LIMIT 10000";
+	$sql = "SELECT * FROM serial_numbers WHERE device_id = " . $device_id . " AND manufacturer_id = " . $manufacturer_id . " AND serial_number LIKE '" . $serial_number . "' LIMIT 10000";
 	
 	$dblink = db_connect("equipment");
 	try {
@@ -273,6 +273,14 @@ if ($search_by == "all")
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
 		echo $responseData;
+		die();
+	}
+	
+	if ($result->num_rows == 0)
+	{
+		$responseData = create_header("Error", "No results found", "search_equipment", "");
+		echo $responseData;
+		$result->close();
 		die();
 	}
 	
