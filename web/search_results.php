@@ -34,6 +34,20 @@
 							  echo print_r($data);
 							  echo "</pre>";
 						  }
+						
+                          if (isset($_REQUEST['search_by']) && isset($_REQUEST['manufacturer_id']))
+                          {
+                              $search_by = $_REQUEST['search_by'];
+                              $manufacturer_id = $_REQUEST['manufacturer_id'];
+                              $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&manufacturer_id=" . $manufacturer_id;
+                              $result = call_api($url);
+                              $resultArray = json_decode($result, true);
+                              $status = get_msg_status($resultsArray);
+                              $data = get_data($resultArray);
+                              echo "<pre>";
+                              echo print_r($data);
+                              echo "</pre>";
+                          }
 						 ?>
 					</div>
 				</div>

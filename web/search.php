@@ -114,5 +114,23 @@ if (isset($_POST['submit-search-device']))
 	*/
 	header("Location: search_results.php?search_by=$search_by&device_id=$device_id");
 	die();
-}	
+}
+?>
+<?php
+ob_start();
+if (isset($_POST['submit-search-manufacturer']))
+{
+    $search_by = "manufacturer";
+    $manufacturer_id = $_POST['manufacturer_id'];
+	/*
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
+    $result = call_api($url);
+    $resultArray = json_decode($result, true);
+    $status = get_msg_status($resultsArray);
+    $data = get_data($resultArray);
+	$jsonData = json_encode($data);
+	*/
+	header("Location: search_results.php?search_by=$search_by&manufacturer_id=$manufacturer_id");
+	die();
+}
 ?>

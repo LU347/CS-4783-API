@@ -1,11 +1,4 @@
 <?php
-/*
-	if device_id == null
-		person is searching by manufacturer or serial number or just manufacturer
-	if manufacturer_id == null
-		person is searching by device or serial number
-*/
-
 if ($search_by == NULL)
 {
 	/*
@@ -23,7 +16,6 @@ if ($search_by == NULL)
 if ($search_by == "device")
 {
 	//query device is used to get the device_id, i already have the device_id
-	
 	if ($device_id == NULL)
 	{
 		$responseData = create_header("ERROR", "Device ID invalid or missing", "search_equipment", "");
@@ -87,6 +79,72 @@ if ($search_by == "device")
 	$responseData = create_header("Success", "Search by device success", "search_equipment", json_encode($payload));
 	echo $responseData;
 	die();
+}
+
+if ($search_by == "manufacturer")
+{
+	if ($manufacturer_id == NULL)
+	{
+		$responseData = create_header("ERROR", "Manufacturer ID invalid or missing", "search_equipment", "");
+		echo $responseData;
+		die();
+	}
+	//query manufacturer to check if the id is valid and to get the manufacturer name
+	//method = get_manufacturer
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?manufacturer_id=" . $manufacturer_id . "&method=get_manufacturer";
+	
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+	$status = trim(get_msg_status($resultsArray));
+	$manufacturer = "";
+	
+	//if the manufacturer id was found, the manufacter name is returned
+	if (strcmp($status, "Success") == 0)
+	{
+		$manufacturer = trim(substr($resultsArray[3], 5));
+	}
+	
+	if (strcmp($status, "ERROR") == 0)
+	{
+		$responseData = create_header("ERROR", "Manufacturer not found in database", "query_manufacturer", "");
+		echo $responseData;
+		die();
+	}
+	
+	$sql = "SELECT auto_id, device_id, serial_number FROM serial_numbers WHERE manufacturer_id=" . $manufacturer_id .  " LIMIT 10000";
+	$dblink = db_connect("equipment");
+	
+	try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		echo $responseData;
+		die();
+	}
+	
+	//need to check if the sql result returned > 0 rows
+	while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
+	{
+		//need to pull the device type instead of manufacturer this time
+		//format auto_id, device type, manufacturer name, serial number
+		$device_type = "";
+		$device_sql = "SELECT device_type FROM devices WHERE auto_id=" . $equipment_data['device_id'];
+		try {
+			$device_sql_result = $dblink->query($device_sql);
+			$device_data = $device_sql_result->fetch_array(MYSQLI_ASSOC);
+		} catch (Exception $e) {
+			$errorMsg = "Error with sql: " . $e;
+			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			echo $responseData;
+			die();
+		}
+		$row = $equipment_data['device_type'] . "," . $manufacturer . "," . $equipment_data['serial_number'];
+		$payload[$equipment_data['auto_id']] = $row;
+	}
+	$responseData = create_header("Success", "Search by manufacturer success", "search_equipment", json_encode($payload));
+	echo $responseData;
+	die();
+	
 }
 die();
 ?>
