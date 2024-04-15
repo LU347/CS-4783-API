@@ -59,7 +59,7 @@
 								?>
 						</select>
 						<label for="device-input">Update Device to:</label>
-						<input type="text" name="updated-device" placeholder="Example: Computer"><br>
+						<input type="text" name="updated_str" placeholder="Example: Computer"><br>
 						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
 					</form>
 					
@@ -132,3 +132,13 @@
 		}
 	</script>
 </html>
+<?php
+if (isset($_POST['submit_new_device']))
+{
+	$device_id = $_POST['device_id'];
+	$updated_str = $_POST['updated_str'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/update_device?device_id=" . $device_id . "&updated_str=" . $updated_str;
+	echo $url;
+	die();
+}
+?>
