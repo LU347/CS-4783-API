@@ -57,10 +57,20 @@ switch($endPoint)
 		$serial_number = $_REQUEST['serial_number'];
 		include("search_equipment.php");
 		break;
-	case "update_device":
+	case "update_device":						//error checking done
 		$device_id = $_REQUEST['device_id'];
 		$updated_str = $_REQUEST['updated_str'];
 		include("update_device.php");
+		break;
+	case "update_manufacturer":
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$updated_str = $_REQUEST['updated_str'];
+		include("update_manufacturer.php");
+		break;
+	case "update_serial_number":
+		$serial_number = $_REQUEST['serial_number'];
+		$updated_str = $_REQUEST['updated_str'];
+		include("update_serial_number.php");
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');

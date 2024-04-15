@@ -54,7 +54,7 @@ $dblink = db_connect("equipment");
 if (strcmp($status, "Success") == 0)
 {
 	//i can update the auto id with the new str
-	$sql = "UPDATE devices SET device_type ='" . $updated_str . "' WHERE auto_id=" . $device_id;
+	$sql = "UPDATE devices SET device_type ='" . ucfirst($updated_str) . "' WHERE auto_id=" . $device_id;
 	try {
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
