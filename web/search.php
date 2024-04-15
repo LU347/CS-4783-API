@@ -88,7 +88,7 @@
 							<br>
 							<form method="POST" action="">
 								<label for="serial_number">Search by Serial Number:</label>
-								<input type="text">
+								<input type="text" name="serial_number" placeholder="Format: SN-XXXXXXXXXX..">
 								<button type="submit" value="submit-search-serial" name="submit-search-serial">Search Serial Number</button>
 							</form>
 						</div>
@@ -104,14 +104,6 @@ if (isset($_POST['submit-search-device']))
 {
     $search_by = "device";
     $device_id = $_POST['device_id'];
-	/*
-    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
-    $result = call_api($url);
-    $resultArray = json_decode($result, true);
-    $status = get_msg_status($resultsArray);
-    $data = get_data($resultArray);
-	$jsonData = json_encode($data);
-	*/
 	header("Location: search_results.php?search_by=$search_by&device_id=$device_id");
 	die();
 }
@@ -122,15 +114,18 @@ if (isset($_POST['submit-search-manufacturer']))
 {
     $search_by = "manufacturer";
     $manufacturer_id = $_POST['manufacturer_id'];
-	/*
-    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/search_equipment?search_by=" . $search_by . "&device_id=" . $device_id;
-    $result = call_api($url);
-    $resultArray = json_decode($result, true);
-    $status = get_msg_status($resultsArray);
-    $data = get_data($resultArray);
-	$jsonData = json_encode($data);
-	*/
 	header("Location: search_results.php?search_by=$search_by&manufacturer_id=$manufacturer_id");
 	die();
 }
 ?>
+<?php
+ob_start();
+if (isset($_POST['submit-search-serial']))
+{
+    $search_by = "serial_number";
+    $serial_number = $_POST['serial_number'];
+	header("Location: search_results.php?search_by=$search_by&serial_number=$serial_number");
+	die();
+}
+?>
+

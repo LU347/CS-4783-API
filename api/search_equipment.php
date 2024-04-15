@@ -146,5 +146,64 @@ if ($search_by == "manufacturer")
 	die();
 	
 }
+
+if ($search_by == "serial_number")
+{
+	if ($serial_number == NULL)
+	{
+		$responseData = create_header("ERROR", "Serial Number invalid or missing", "search_equipment", "");
+		echo $responseData;
+		die();
+	}
+		
+	//i will need the manufacturer name and device type this time
+	//check if serial_number is valid?
+	$sql = "SELECT * FROM serial_numbers WHERE serial_number LIKE '%" . $serial_number . "' LIMIT 10000";
+	$dblink = db_connect("equipment");
+	try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		echo $responseData;
+		die();
+	}
+	
+	//check if there are no results
+	while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
+	{
+		//need to pull device type and manufacturer name
+		$device_type = "";
+		$device_sql = "SELECT device_type FROM devices WHERE auto_id=" . $equipment_data['device_id'];
+		try {
+			$device_sql_result = $dblink->query($device_sql);
+			$device_data = $device_sql_result->fetch_array(MYSQLI_ASSOC);
+		} catch (Exception $e) {
+			$errorMsg = "Error with sql: " . $e;
+			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			echo $responseData;
+			die();
+		}
+		$device_type = $device_data['device_type'];
+		
+		$manufacturer = "";
+		$manu_sql = "SELECT manufacturer FROM manufacturers WHERE auto_id =".$equipment_data['manufacturer_id'];
+		try {
+			$manu_query_result = $dblink->query($manu_sql);
+			$manu_data = $manu_query_result->fetch_array(MYSQLI_ASSOC);
+		} catch (Exception $e) {
+			$errorMsg = "Error with sql: " . $e;
+			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			echo $responseData;
+			die();
+		}
+		$manufacturer = $manu_data['manufacturer'];
+		
+		$row = $device_type . "," . $manufacturer . "," . $equipment_data['serial_number'];
+		$payload[$equipment_data['auto_id']] = $row;
+	}
+	$responseData = create_header("Success", "Search by device success", "search_equipment", json_encode($payload));
+	echo $responseData;
+	die();
+}
 die();
 ?>

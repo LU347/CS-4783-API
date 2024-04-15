@@ -41,6 +41,7 @@ switch($endPoint)
 		break;
 	case "query_serial_number":
 		$serial_number = $_REQUEST['serial_number'];
+		$method = $_REQUEST['method'];
 		include("query_serial_number.php");
 		break;
 	case "list_devices":
