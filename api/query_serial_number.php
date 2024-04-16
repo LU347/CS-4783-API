@@ -1,4 +1,5 @@
 <?php
+//need to refactor
 $dblink = db_connect("equipment");
 $sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number` = '$serial_number'";
 
@@ -16,6 +17,7 @@ if ($result->num_rows == 0) {
 	$output[] = 'MSG: Serial does not exist';
 	$output[] = 'Action: query_serial_number';
 	$responseData = json_encode( $output );
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 } else {
@@ -24,7 +26,10 @@ if ($result->num_rows == 0) {
 	$output[] = 'Status: ERROR';
 	$output[] = 'MSG: Serial Number already exists';
 	$output[] = 'Action: query_serial_number';
+	$data = $result->fetch_array(MYSQLI_ASSOC);
+	$output[] = 'Data: ' . $data['auto_id'];
 	$responseData = json_encode( $output );
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }

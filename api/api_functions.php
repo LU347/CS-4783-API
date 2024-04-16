@@ -50,4 +50,24 @@ function get_data($msg)
   $payload_Data = explode("Data:", $tmp);
   return json_decode( $payload_Data[1], true);
 }
+
+function log_activity($dblink, $responseData)
+{
+    //not including Data: 
+    $resultsArray = json_decode($responseData, true);
+    $log[] = $resultsArray[0];
+    $log[] = $resultsArray[1];
+    $log[] = $resultsArray[2];
+    $jsonLog = json_encode($log, true);
+    $sql = "INSERT INTO api_logs (log) VALUES('" . $jsonLog . "')";
+
+    try {
+        $result = $dblink->query($sql);	
+    } catch (Exception $e)
+    {
+        $responseData = create_header("ERROR", "error uploading log", "log_activity", "");
+        echo $responseData;
+        die();
+    }
+}
 ?>

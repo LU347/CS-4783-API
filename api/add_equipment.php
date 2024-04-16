@@ -1,8 +1,11 @@
 <?php
+$dblink = db_connect("equipment");
+
 if ($device_id == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_device", "");
     echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 } 
 
@@ -10,6 +13,7 @@ if ($manufacturer_id == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_manufacturer", "");
     echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
 
@@ -17,6 +21,7 @@ if ($serial_number == NULL)
 {
 	$responseData = create_header("ERROR", "Missing serial number ID", "None", "");
     echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
 
@@ -31,10 +36,9 @@ if (strcmp($status, "ERROR") == 0)
 {
 	$responseData = create_header("ERROR", $msg, "query_serial_number", "");
     echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 } 
-
-$dblink = db_connect("equipment");
 
 if (strcmp($status, "Success") == 0)
 {
@@ -47,10 +51,12 @@ if (strcmp($status, "Success") == 0)
 		$errorMsg = "Error with SQL" . $e;
 		$responseData = create_header("ERROR", $errorMsg, "add_equipment", "");
     	echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	$responseData = create_header("Success", "Equipment successfully added!", "add_equipment", "");
 	echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
 $dblink->close();

@@ -8,6 +8,7 @@ if (strcmp($method, "get_device_type") == 0 )
 	} catch (Exception $e) {
 		$responseData = create_header("ERROR, Error with sql", "query_device", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	
@@ -15,13 +16,15 @@ if (strcmp($method, "get_device_type") == 0 )
 	{
 		$responseData = create_header("Error", "Device type does not exist", "query_device", "");
 		echo $responseData;
-		$result->close();
+		log_activity($dblink, $responseData);
+		$dblink->close();
 		die();
 	} else {
 		$resultArray = $result->fetch_array(MYSQLI_ASSOC);
 		$device_type = $resultArray['device_type'];
 		$responseData = create_header("Success", "Device type successfully found", "query_device", $device_type);
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	}
@@ -32,6 +35,7 @@ if (strcmp($method, "get_device_type") == 0 )
 	} catch (Exception $e) {
 		$responseData = create_header("ERROR, Error with sql", "query_device", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	
@@ -39,6 +43,7 @@ if (strcmp($method, "get_device_type") == 0 )
 	{
 		$responseData = create_header("Success", "Device type does not exist", "query_device", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	} else {
@@ -46,6 +51,7 @@ if (strcmp($method, "get_device_type") == 0 )
 		$auto_id = $resultArray['auto_id'];
 		$responseData = create_header("ERROR", "Device type already exists", "query_device", $auto_id);
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	}

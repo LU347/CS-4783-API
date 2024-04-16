@@ -3,9 +3,11 @@
 $device_id = $_REQUEST['device_id'];
 $updated_str = $_REQUEST['updated_str'];
 */
+$dblink = db_connect("equipment");
 if ($device_id == NULL)
 {
 	$responseData = create_header("ERROR", "Device ID missing or invalid", "update_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
@@ -13,11 +15,13 @@ if ($device_id == NULL)
 if ($updated_str == NULL)
 {
 	$responseData = create_header("ERROR", "Missing new device type", "update_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 } else if (ctype_digit($updated_str) == true)
 {
 	$responseData = create_header("ERROR", "New device is not a string", "update_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
@@ -31,6 +35,7 @@ $status = trim(get_msg_status($resultsArray));
 if (strcmp($status, "ERROR") == 0)
 {
 	$responseData = create_header("ERROR", "Invalid Device Id", "query_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
@@ -44,13 +49,13 @@ $status = trim(get_msg_status($resultsArray));
 if (strcmp($status, "ERROR") == 0) //means the updated device already exists
 {
 	$responseData = create_header("ERROR", "The updated device is already in the database", "query_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
 
 //if success that means the updated str does not exist in the database
 //now i can update the device_id with updated_str
-$dblink = db_connect("equipment");
 if (strcmp($status, "Success") == 0)
 {
 	//i can update the auto id with the new str
@@ -59,11 +64,13 @@ if (strcmp($status, "Success") == 0)
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
 		$responseData = create_header("ERROR", "Error with sql: $e", "update_device", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
 	
 	$responseData = create_header("Success", "Device updated", "update_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }

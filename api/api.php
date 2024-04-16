@@ -71,6 +71,7 @@ switch($endPoint)
 		$serial_number = $_REQUEST['serial_number'];
 		$updated_str = $_REQUEST['updated_str'];
 		include("update_serial_number.php");
+		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');

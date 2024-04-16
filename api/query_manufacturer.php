@@ -8,6 +8,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 	} catch (Exception $e) {
 		$responseData = create_header("ERROR", "Error with sql: $e", "query_manufacturer", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	}
@@ -16,6 +17,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 	{
 		$responseData = create_header("Error", "Manufacturer does not exist", "query_manufacturer", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	} else {
@@ -23,6 +25,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 		$manufacturer = $resultArray['manufacturer'];
 		$responseData = create_header("Success", "Manufacturer successfully found", "query_manufacturer", $manufacturer);
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	}
@@ -33,6 +36,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 	} catch (Exception $e) {
 		$responseData = create_header("ERROR, Error with sql: $e", "query_manufacturer", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	
@@ -40,6 +44,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 	{
 		$responseData = create_header("Success", "Manufacturer type does not exist", "query_manufacturer", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	} else {
@@ -47,6 +52,7 @@ if (strcmp($method, "get_manufacturer") == 0)
 		$auto_id = $resultArray['auto_id'];
 		$responseData = create_header("ERROR", "Manufacturer already exists", "query_device", $auto_id);
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		$dblink->close();
 		die();
 	}

@@ -15,17 +15,32 @@
         <main>
             <section class="home-page">
 				<?php
-				  if (isset($_REQUEST['msg']) && isset($_REQUEST['msg']) == "DeviceUpdated")
+				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceUpdated")
 				  {
 					  echo "<div class='parent'><div class='successNotification'><p>Device successfully updated!</div></div>";
 				  }
-				  if (isset($_REQUEST['msg']) && isset($_REQUEST['msg']) == "ManufacturerUpdated")
+				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "ManufacturerUpdated")
 				  {
 					  echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully updated!</div></div>";
 				  }
-				  if (isset($_REQUEST['msg']) && isset($_REQUEST['msg']) == "SerialUpdated")
+				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "SerialUpdated")
 				  {
 					  echo "<div class='parent'><div class='successNotification'><p>Serial Number successfully updated!</div></div>";
+				  }
+				
+                  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
+				  {
+					  echo "<div class='parent'><div class='successNotification'><p>Equipment successfully updated!</div></div>";
+				  }
+				
+                  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceAdded")
+				  {
+					  echo "<div class='parent'><div class='successNotification'><p>Device successfully updated!</div></div>";
+				  }
+				  
+			      if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "ManufacturerAdded")
+				  {
+					  echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully updated!</div></div>";
 				  }
 				 ?>
                 <div class="parent">

@@ -13,6 +13,7 @@ $json = json_encode( $manufacturers);
 $output[] = 'MSG: ' . $json;
 $output[] = 'Action: None';
 $responseData = json_encode( $output );
+log_activity($dblink, $responseData);
 echo $responseData;
 die();
 ?>

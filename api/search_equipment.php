@@ -1,9 +1,12 @@
 <?php
 //need to refactor
+$dblink = db_connect("equipment");
+
 if ($search_by == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid Search Condition", "search_equipment", "");
 	echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
 
@@ -15,6 +18,7 @@ if ($search_by == "device")
 	{
 		$responseData = create_header("ERROR", "Device ID invalid or missing", "search_equipment", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	//need check if device id is valid
@@ -36,18 +40,18 @@ if ($search_by == "device")
 	if (strcmp($status, "ERROR") == 0)
 	{
 		$responseData = create_header("ERROR", "Device type no found", "query_device", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
 	
 	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 10000";
 	
-	$dblink = db_connect("equipment"); //move
-	
 	try {
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -65,6 +69,7 @@ if ($search_by == "device")
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
@@ -81,6 +86,7 @@ if ($search_by == "manufacturer")
 	if ($manufacturer_id == NULL)
 	{
 		$responseData = create_header("ERROR", "Manufacturer ID invalid or missing", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -102,6 +108,7 @@ if ($search_by == "manufacturer")
 	if (strcmp($status, "ERROR") == 0)
 	{
 		$responseData = create_header("ERROR", "Manufacturer not found in database", "query_manufacturer", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -113,6 +120,7 @@ if ($search_by == "manufacturer")
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -127,16 +135,19 @@ if ($search_by == "manufacturer")
 		try {
 			$device_sql_result = $dblink->query($device_sql);
 			$device_data = $device_sql_result->fetch_array(MYSQLI_ASSOC);
+			$device_type = $device_data['device_type'];
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
-		$row = $equipment_data['device_type'] . "," . $manufacturer . "," . $equipment_data['serial_number'];
+		$row = $device_type . "," . $manufacturer . "," . $equipment_data['serial_number'];
 		$payload[$equipment_data['auto_id']] = $row;
 	}
 	$responseData = create_header("Success", "Search by manufacturer success", "search_equipment", json_encode($payload));
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 	
@@ -147,6 +158,7 @@ if ($search_by == "serial_number")
 	if ($serial_number == NULL)
 	{
 		$responseData = create_header("ERROR", "Serial Number invalid or missing", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -159,6 +171,7 @@ if ($search_by == "serial_number")
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -175,6 +188,7 @@ if ($search_by == "serial_number")
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
@@ -188,6 +202,7 @@ if ($search_by == "serial_number")
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
@@ -206,18 +221,21 @@ if ($search_by == "all")
 	if ($device_id == NULL)
 	{
 		$responseData = create_header("ERROR", "Device id invalid or missing", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
 	if ($manufacturer_id == NULL)
 	{
 		$responseData = create_header("ERROR", "Manufacturer id invalid or missing", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
 	if ($serial_number == NULL)
 	{
 		$responseData = create_header("ERROR", "Serial Number invalid or missing", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -240,6 +258,7 @@ if ($search_by == "all")
 	if (strcmp($status, "ERROR") == 0)
 	{
 		$responseData = create_header("ERROR", "Device type no found", "query_device", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -261,6 +280,7 @@ if ($search_by == "all")
 	if (strcmp($status, "ERROR") == 0)
 	{
 		$responseData = create_header("ERROR", "Manufacturer not found in database", "query_manufacturer", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -272,6 +292,7 @@ if ($search_by == "all")
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
@@ -279,6 +300,7 @@ if ($search_by == "all")
 	if ($result->num_rows == 0)
 	{
 		$responseData = create_header("Error", "No results found", "search_equipment", "");
+		log_activity($dblink, $responseData);
 		echo $responseData;
 		$result->close();
 		die();
@@ -295,6 +317,7 @@ if ($search_by == "all")
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
@@ -308,6 +331,7 @@ if ($search_by == "all")
 		} catch (Exception $e) {
 			$errorMsg = "Error with sql: " . $e;
 			$responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
+			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
 		}
@@ -317,6 +341,7 @@ if ($search_by == "all")
 		$payload[$equipment_data['auto_id']] = $row;
 	}
     $responseData = create_header("Success", "Search by device success", "search_equipment", json_encode($payload));
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }

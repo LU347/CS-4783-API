@@ -1,7 +1,10 @@
 <?php
+$dblink = db_connect("equipment");
+
 if ($device_id == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing device ID", "add_device", "");
+	log_activity($dblink, $responseData);
     echo $responseData;
 	die();
 }
@@ -15,11 +18,10 @@ $msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it
 if (strcmp($status, "ERROR") == 0)
 {
 	$responseData = create_header("ERROR", $msg, "query_device", "");
+	log_activity($dblink, $responseData);
     echo $responseData;
 	die();
 } 
-
-$dblink = db_connect("equipment");
 
 if (strcmp($status, "Success") == 0)
 {
@@ -31,10 +33,12 @@ if (strcmp($status, "Success") == 0)
 	} catch(Exception $e) {
 		$errorMsg = "Error with SQL" . $e;
 		$responseData = create_header("ERROR", $errorMsg, "add_device", "");
+		log_activity($dblink, $responseData);
     	echo $responseData;
 		die();
 	}
 	$responseData = create_header("Success", "Device successfully added!", "add_device", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }

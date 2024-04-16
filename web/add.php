@@ -120,8 +120,6 @@
 </html>
 <?php
 ob_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 if (isset($_POST['submit']))
 {
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";

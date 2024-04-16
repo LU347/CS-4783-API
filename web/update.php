@@ -79,7 +79,7 @@
 								?>
 						</select>
 						<label for="manufacturer-input">Update Manufacturer to:</label>
-						<input type="text" name="updated-manufactrer" placeholder="Example: Computer"><br>
+						<input type="text" name="updated_str" placeholder="Example: Apple"><br>
 						<button type="submit" value="submit_new_manufacturer" name="submit_new_manufacturer">Submit</button>
 					</form>
 					
@@ -89,10 +89,10 @@
 				<div class="new-form-container">
 					<form method="POST" action="">
 						<label for="serial-input">Input Serial Number (exact):</label>
-						<input type="text" name="serial-number" placeholder="Example: Computer"><br>
+						<input type="text" name="serial_number" placeholder="Example: SN-XXXXX"><br>
 						<label for="device-input">Update Serial Number (exact) to:</label>
-						<input type="text" name="updated-manufactrer" placeholder="Example: Computer"><br>
-						<button type="submit" value="submit_new_manufacturer" name="submit_new_manufacturer">Submit</button>
+						<input type="text" name="updated_str" placeholder="Example: SN-XXXX"><br>
+						<button type="submit" value="submit_new_serial" name="submit_new_serial">Submit</button>
 					</form>
 					
 				</div>
@@ -154,6 +154,7 @@
 	</script>
 </html>
 <?php
+ob_start();
 if (isset($_POST['submit_new_device']))
 {
 	$device_id = $_POST['device_id'];
@@ -168,6 +169,59 @@ if (isset($_POST['submit_new_device']))
     if (strcmp($status, "Success") == 0) 
     {
         header("Location: index.php?msg=DeviceUpdated"); // change to device added
+        die();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: update.php?msg=Error&val=$msg");
+        die();
+    }
+}
+?>
+<?php
+ob_start();
+if (isset($_POST['submit_new_manufacturer']))
+{
+	$manufacturer_id = $_POST['manufacturer_id'];
+	$updated_str = $_POST['updated_str'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/update_manufacturer?manufacturer_id=" . $manufacturer_id . "&updated_str=" . $updated_str;
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+
+    $status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=ManufacturerUpdated"); // change to device added
+        die();
+    }
+
+    if (strcmp($status, "ERROR") == 0) 
+    {
+        header("Location: update.php?msg=Error&val=$msg");
+        die();
+    }
+}
+?>
+<?php
+ob_start();
+if (isset($_POST['submit_new_serial']))
+{
+	$serial_number = $_POST['serial_number'];
+	$updated_str = $_POST['updated_str'];
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/update_serial_number?serial_number=" . $serial_number . "&updated_str=" . $updated_str;
+	
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+
+    $status = get_msg_status($resultsArray);
+    $msg = substr($resultsArray[1], 4); //this should get the msg: line (if it's not json)
+
+    if (strcmp($status, "Success") == 0) 
+    {
+        header("Location: index.php?msg=SerialUpdated"); // change to device added
         die();
     }
 

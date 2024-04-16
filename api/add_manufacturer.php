@@ -1,7 +1,10 @@
 <?php
+$dblink = db_connect("equipment");
+
 if ($manufacturer_id == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing manufacturer", "add_manufacturer", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
@@ -17,10 +20,9 @@ if (strcmp($status, "ERROR") == 0)
 {
 	$responseData = create_header("ERROR", $msg, "query_manufacturer", "");
 	echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
-
-$dblink = db_connect("equipment");
 
 if (strcmp($status, "Success") == 0)
 {
@@ -33,10 +35,12 @@ if (strcmp($status, "Success") == 0)
 		$errorMsg = "Error with SQL: " . $e;
 		$responseData = create_header("ERROR", $errorMsg, "add_manufacturer", "");
 		echo $responseData;
+		log_activity($dblink, $responseData);
 		die();
 	}
 	$responseData = create_header("Success", "Manufacturer successfully added!", "add_manufacturer", "");
 	echo $responseData;
+	log_activity($dblink, $responseData);
 	die();
 }
 $dblink->close();
