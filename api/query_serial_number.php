@@ -18,6 +18,16 @@ if ($method == NULL)
 	die();
 }
 
+if (strcmp($method == "get_auto_id") == 0)
+{
+	
+}
+
+if (strcmp($method == "check_duplicate") == 0)
+{
+	
+}
+
 try
 {
 	$result = $dblink->query($sql);
