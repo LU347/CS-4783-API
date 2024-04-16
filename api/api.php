@@ -1,13 +1,6 @@
 <?php
 include("../functions.php");
 include("api_functions.php");
-/*$url=$_SERVER['REQUEST_URI'];
-header('Content-Type: application/json');
-header('HTTP/1.1 200 OK');
-$output[]='Status: ERROR';
-$output[]='MSG: System Disabled';
-$output[]='Action: None';
-//log_error($_SERVER['REMOTE_ADDR'],"SYSTEM DISABLED","SYSTEM DISABLED: $endPoint",$url,"api.php");*/
 $url=$_SERVER['REQUEST_URI'];
 $path = parse_url($url, PHP_URL_PATH);
 $pathComponents = explode("/", trim($path, "/"));
@@ -57,7 +50,7 @@ switch($endPoint)
 		$serial_number = $_REQUEST['serial_number'];
 		include("search_equipment.php");
 		break;
-	case "update_device":						//error checking done
+	case "update_device":						
 		$device_id = $_REQUEST['device_id'];
 		$updated_str = $_REQUEST['updated_str'];
 		include("update_device.php");

@@ -6,6 +6,7 @@ $sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number` = '$serial_
 if ($serial_number == NULL)
 {
 	$responseData = create_header("ERROR", "Serial Number is invalid or missing", "query_serial_number", "");
+	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
@@ -18,15 +19,18 @@ if ($method == NULL)
 	die();
 }
 
+//TODO: 
+/*
 if (strcmp($method == "get_auto_id") == 0)
 {
-	
+	$sql = "SELECT auto_id FROM serial_numbers WHERE serial_number =" . $serial
 }
 
 if (strcmp($method == "check_duplicate") == 0)
 {
 	
 }
+*/
 
 try
 {
