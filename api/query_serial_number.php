@@ -3,6 +3,21 @@
 $dblink = db_connect("equipment");
 $sql = "SELECT `auto_id` FROM `serial_numbers` WHERE `serial_number` = '$serial_number'";
 
+if ($serial_number == NULL)
+{
+	$responseData = create_header("ERROR", "Serial Number is invalid or missing", "query_serial_number", "");
+	echo $responseData;
+	die();
+}
+
+if ($method == NULL)
+{
+	$responseData = create_header("ERROR", "Must specify method", "query_serial_number", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
+}
+
 try
 {
 	$result = $dblink->query($sql);
