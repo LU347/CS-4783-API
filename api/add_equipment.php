@@ -3,7 +3,7 @@ $dblink = db_connect("equipment");
 
 if ($device_id == NULL)
 {
-	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_device", "");
+	$responseData = create_header("ERROR", "Invalid or missing device ID", "add_equipment", "");
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();

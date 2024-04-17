@@ -29,6 +29,7 @@ if (strcmp($method, "get_device_type") == 0 )
 		die();
 	}
 } elseif (strcmp($method, "check_device_duplicate") == 0) {
+	//TODO: need to check by device_type too
 	$sql = "SELECT auto_id FROM devices WHERE device_type = '$device_id'"; // should be device type
 	try {
 		$result = $dblink->query($sql);
