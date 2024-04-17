@@ -7,6 +7,9 @@ if ($device_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
+} else {
+	//check if device_id is valid and active
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?device_id=";
 } 
 
 if ($manufacturer_id == NULL)
@@ -25,7 +28,7 @@ if ($serial_number == NULL)
 	die();
 }
 
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $serial_number;
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $serial_number . "&method=check_duplicate";
 $serial_query_result = call_api($url);
 
 $resultsArray = json_decode($serial_query_result, true); //turns result into array
@@ -38,7 +41,7 @@ if (strcmp($status, "ERROR") == 0)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} 
+}
 
 if (strcmp($status, "Success") == 0)
 {
