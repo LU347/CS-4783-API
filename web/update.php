@@ -49,7 +49,7 @@
 				<div class="new-form-container">
 					<form method="POST" action="">
 						<label for="devices">Select Device:</label>
-						<select name="device_id">
+						<select name="new_device_id">
 								<option selected disabled>Choose Here</option>
 								<?php
 									foreach($devices as $key=>$value)
@@ -157,7 +157,7 @@
 ob_start();
 if (isset($_POST['submit_new_device']))
 {
-	$device_id = $_POST['device_id'];
+	$device_id = $_POST['new_device_id'];
 	$updated_str = $_POST['updated_str'];
 	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/update_device?device_id=" . $device_id . "&updated_str=" . $updated_str;
 	$result = call_api($url);

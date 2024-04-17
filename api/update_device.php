@@ -4,6 +4,7 @@ $device_id = $_REQUEST['device_id'];
 $updated_str = $_REQUEST['updated_str'];
 */
 $dblink = db_connect("equipment");
+
 if ($device_id == NULL)
 {
 	$responseData = create_header("ERROR", "Device ID missing or invalid", "update_device", "");
@@ -40,26 +41,24 @@ if (strcmp($status, "ERROR") == 0)
 	die();
 }
 
-//need to query_device to check if the updated string value already exists in the database
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_device_duplicate&device_id=" . $updated_str;
-$result = call_api($url);
-$resultsArray = json_decode($result, true); //turns result into array
-$status = trim(get_msg_status($resultsArray));
-
-if (strcmp($status, "ERROR") == 0) //means the updated device already exists
+if (strcmp($status, "Success") == 0) //There is a device associated with the given id
 {
-	$responseData = create_header("ERROR", "The updated device is already in the database", "query_device", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
-}
-
-//if success that means the updated str does not exist in the database
-//now i can update the device_id with updated_str
-if (strcmp($status, "Success") == 0)
-{
-	//i can update the auto id with the new str
-	$sql = "UPDATE devices SET device_type ='" . ucfirst($updated_str) . "' WHERE auto_id=" . $device_id;
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_duplicates&device_type=" . $updated_str;
+	$result = call_api($url);
+	$resultsArray = json_decode($result, true);
+	$status = trim(get_msg_status($resultsArray));
+	
+	if (strcmp($status, "ERROR") == 0) //means the updated device already exists
+    {
+		$responseData = create_header("ERROR", "The updated device is already in the database", "query_device", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+    }
+	
+	if (strcmp($status, "Success") == 0)
+    {
+		$sql = "UPDATE devices SET device_type ='" . strtolower($updated_str) . "' WHERE auto_id=" . $device_id;
 	try {
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
@@ -68,12 +67,16 @@ if (strcmp($status, "Success") == 0)
 		echo $responseData;
 		die();
 	}
-	
+	//TODO: Verify update was successfull
 	$responseData = create_header("Success", "Device updated", "update_device", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
+    }
 }
+$responseData = create_header("ERROR", "Unknown error occured", "update_device", "");
+log_activity($dblink, $responseData);
+echo $responseData;
 $dblink->close();
 die();
 ?>

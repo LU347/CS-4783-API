@@ -71,7 +71,7 @@
 				<div class="new-form-container">
 					<form method="POST" action="">
 						<label for="devices">New Device:</label>
-						<input type="text" name="new_device_id" placeholder="Example: Computer"><br>
+						<input type="text" name="device_type" placeholder="Example: Computer"><br>
 						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
 					</form>
 					
@@ -149,8 +149,8 @@ if (isset($_POST['submit']))
 
 if (isset($_POST['submit_new_device']))
 {
-    $device_id = $_POST['new_device_id'];
-    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_id=" . $device_id;
+    $device_type = $_POST['device_type'];
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_type=" . $device_type;
     $result = call_api($url);
     $resultsArray = json_decode($result, true);
 

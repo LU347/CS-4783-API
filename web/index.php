@@ -35,7 +35,7 @@
 				
                   if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceAdded")
 				  {
-					  echo "<div class='parent'><div class='successNotification'><p>Device successfully updated!</div></div>";
+					  echo "<div class='parent'><div class='successNotification'><p>Device successfully added!</div></div>";
 				  }
 				  
 			      if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "ManufacturerAdded")

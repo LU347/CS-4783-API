@@ -23,28 +23,26 @@ if ($updated_str == NULL)
 }
 
 //need to query_serial_number to see if the serial number is valid, then update the serial number with the updated str
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $serial_number; //returns an error if the serial number exists
-
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?method=get_auto_id&serial_number=" . $serial_number; //returns an error if the serial number exists
 $result = call_api($url);
 $resultsArray = json_decode($result, true); //turns result into array
 $status = trim(get_msg_status($resultsArray));
 $auto_id = -1;
 
-if (strcmp($status, "Success") == 0) //serial number does not exist
+if (strcmp($status, "Success") == 0) //auto_id of serial number is found
+{
+	$auto_id = substr($resultsArray[3], 5);
+}
+
+if (strcmp($status, "ERROR") == 0) //auto_id of serial number wasn't found
 {
 	$responseData = create_header("ERROR", "Serial number does not exist", "query_serial_number", "");
 	echo $responseData;
 	die();
 }
 
-if (strcmp($status, "ERROR") == 0) //serial number is in db
-{
-	//get auto id of $serial_number
-	$auto_id = substr($resultsArray[3], 5);
-}
-
 //need to query_serial_number to check if the updated string value already exists in the database
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $updated_str;
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?method=check_duplicate&serial_number=" . $updated_str;
 $result = call_api($url);
 $resultsArray = json_decode($result, true); //turns result into array
 $status = trim(get_msg_status($resultsArray));
