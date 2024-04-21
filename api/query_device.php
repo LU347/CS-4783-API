@@ -10,7 +10,7 @@
 	get devices depending on $status = "ACTIVE" || "INACTIVE"
 	fix $device_type validation = false error when $device_type is 2 words
 */
-$dblink = db_connect("equipment");
+$dblink = db_connect("equipment"); //check if db connect was successfful
 //TODO: Prevent SQL Injection
 //TODO: Redo logging
 $method_array = ['get_device_id', 'get_device_type', 'check_duplicates', 'check_status'];
@@ -34,6 +34,7 @@ if ($method == NULL)
 	die();
 }
 
+//Checking $device_type input
 if (strcmp($method, "get_device_id") === 0 || strcmp($method, "check_duplicates") === 0)
 {
 	if ($device_type == NULL)
@@ -49,6 +50,25 @@ if (strcmp($method, "get_device_id") === 0 || strcmp($method, "check_duplicates"
 		die();
 	} elseif (preg_match('~[0-9]+~', $device_type)) {
 		$responseData = create_header("ERROR", "Device type contains numbers", "query_device", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	$device_type = urldecode($device_type);
+}
+
+//Checking $device_id input
+if (strcmp($method, "get_device_type") == 0 || strcmp($method, "check_status") == 0)
+{
+	if ($device_id == NULL)
+	{
+		$responseData = create_header("ERROR", "Device ID is missing", "query_device", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	} elseif (ctype_digit($device_id) == false) {
+		$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();

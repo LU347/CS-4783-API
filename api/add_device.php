@@ -1,6 +1,8 @@
 <?php
 $dblink = db_connect("equipment");
 
+$device_type = urldecode($device_type);
+
 if ($device_type == NULL)
 {
     $responseData = create_header("ERROR", "Device type is missing", "query_device", "");
@@ -19,7 +21,8 @@ if ($device_type == NULL)
     die();
 }
 
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_duplicates&device_type=" . $device_type;
+$encoded_device = urlencode($device_type);
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_duplicates&device_type=" . $encoded_device;
 $result = call_api($url);
 $resultsArray = json_decode($result, true); //turns result into array
 $status = trim(get_msg_status($resultsArray));

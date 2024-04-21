@@ -120,6 +120,7 @@
 </html>
 <?php
 ob_start();
+include("../functions.php");
 if (isset($_POST['submit']))
 {
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
@@ -135,13 +136,15 @@ if (isset($_POST['submit']))
 
     if (strcmp($status, "Success") == 0) 
     {
-        header("Location: index.php?msg=EquipmentAdded");
+		$encoded_msg = urlencode("EquipmentAdded");
+        header("Location: index.php?msg=$encoded_msg");
         die();
     }
 
     if (strcmp($status, "ERROR") == 0) 
     {
-        header("Location: add.php?msg=Error&val=$msg");
+        $encoded_msg = urlencode($msg);
+        header("Location: add.php?msg=Error&val=$encoded_msg");
         die();
     }
 
@@ -149,8 +152,9 @@ if (isset($_POST['submit']))
 
 if (isset($_POST['submit_new_device']))
 {
-    $device_type = $_POST['device_type'];
-    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_type=" . $device_type;
+    $device_type = trim($_POST['device_type']);
+	$encoded_device = urlencode($device_type);
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_device?device_type=" . $encoded_device; //TODO: Replace with $encoded_device
     $result = call_api($url);
     $resultsArray = json_decode($result, true);
 
@@ -159,20 +163,22 @@ if (isset($_POST['submit_new_device']))
 
     if (strcmp($status, "Success") == 0) 
     {
-        header("Location: index.php?msg=DeviceAdded"); // change to device added
+		$encoded_msg = urlencode("DeviceAdded");
+        header("Location: index.php?msg=$encoded_msg"); // change to device added
         die();
     }
 
     if (strcmp($status, "ERROR") == 0) 
     {
-        header("Location: add.php?msg=Error&val=$msg");
+		$encoded_msg = urlencode($msg);
+        header("Location: add.php?msg=Error&val=$encoded_msg");
         die();
     }
 }
 
 if (isset($_POST['submit_new_manufacturer']))
 {
-    $new_manufacturer = $_POST['new_manufacturer'];
+    $new_manufacturer = trim($_POST['new_manufacturer']);
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer_id=" . $new_manufacturer;
 
     $result = call_api($url);
@@ -183,13 +189,15 @@ if (isset($_POST['submit_new_manufacturer']))
 
     if (strcmp($status, "Success") == 0) 
     {
-        header("Location: index.php?msg=ManufacturerAdded"); // change to device added
+		$encoded_msg = urlencode("ManufacturerAdded");
+        header("Location: index.php?msg=$encoded_msg"); // change to device added
         die();
     }
-
+	
     if (strcmp($status, "ERROR") == 0) 
     {
-        header("Location: add.php?msg=Error&val=$msg");
+        $encoded_msg = urlencode($msg);
+        header("Location: add.php?msg=Error&val=$encoded_msg");
         die();
     }
 }

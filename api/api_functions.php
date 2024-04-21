@@ -69,5 +69,7 @@ function log_activity($dblink, $responseData)
         echo $responseData;
         die();
     }
+	
+	$dblink->close();
 }
 ?>
