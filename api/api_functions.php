@@ -72,4 +72,86 @@ function log_activity($dblink, $responseData)
 	
 	$dblink->close();
 }
+
+function check_serial_format($serial_number)
+{
+	if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬]/', $serial_number)) 
+	{
+		return false;
+	} elseif (!preg_match('/SN-[\d\w]+/', $serial_number)) {
+		return false;
+	}
+	return true;
+}
+
+function check_if_digit($id) 
+{
+	if (!ctype_digit($id))
+		return false;
+	return true;
+}
+
+function query_device($device_id)
+{
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_status&device_id=" . $device_id;
+	$results = call_api($url);
+	$resultsArray = json_decode($results, true);
+	$status = trim(get_msg_status($resultsArray));
+	$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+	if (strcmp($status, "ERROR") == 0)
+	{
+		return false;
+	}
+	
+	if (strcmp($status, "Success") == 0)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+function query_manufacturer($manufacturer_id)
+{
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?method=check_status&manufacturer_id=" . $manufacturer_id;
+	$results = call_api($url);
+	$resultsArray = json_decode($results, true);
+	$status = trim(get_msg_status($resultsArray));
+	$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+	if (strcmp($status, "Success") == 0)
+	{
+		return true;
+	}
+	
+	if (strcmp($status, "ERROR") == 0)
+	{
+		return false;
+	}
+	
+	return false;
+}
+
+function query_serial_number($serial_number)
+{
+	$serial_number = trim($serial_number);
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?method=check_duplicates&serial_number=" . $serial_number;
+	$results = call_api($url);
+	$resultsArray = json_decode($results, true);
+	$status = trim(get_msg_status($resultsArray));
+	$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+	
+	if (strcmp($status, "Success") == 0)
+	{
+		return true;
+	}
+	
+	if (strcmp($status, "ERROR") == 0)
+	{
+		return false;
+	}
+	
+	return false;
+}
 ?>

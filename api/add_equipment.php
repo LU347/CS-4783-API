@@ -13,11 +13,11 @@ if ($device_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} elseif (!ctype_digit($device_id)) {
-		$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
+} elseif (!($is_digit = check_if_digit($device_id))) {
+	$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
 }
 
 if ($manufacturer_id == NULL)
@@ -26,11 +26,11 @@ if ($manufacturer_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} elseif (!ctype_digit($manufacturer_id)) {
-		$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "query_manufacturer", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
+} elseif (!($is_digit = check_if_digit($manufacturer_id))) {
+	$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "query_manufacturer", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
 }
 
 if ($serial_number == NULL)
@@ -39,68 +39,44 @@ if ($serial_number == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬]/', $serial_number)) {
-    $responseData = create_header("ERROR", "Invalid serial number", "add_equipment", "");
-    echo $responseData;
+} elseif (!($is_clean = check_serial_format($serial_number))) {
+	$responseData = create_header("ERROR", "Invalid serial number", "add_equipment", "");
 	log_activity($dblink, $responseData);
-	die();
-} elseif (!preg_match('/SN-[\d\w]+/', $serial_number)) {
-	$responseData = create_header("ERROR", "Invalid serial format", "add_equipment", "");
 	echo $responseData;
-	log_activity($dblink, $responseData);
 	die();
 }
 
 //check if device_id is valid and active
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_status&device_id=" . $device_id;
-$results = call_api($url);
-$resultsArray = json_decode($results, true);
-$status = trim(get_msg_status($resultsArray));
-$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
-
-if (strcmp($status, "ERROR") == 0)
+$device_valid = query_device($device_id);
+if (!$device_valid)
 {
-    $responseData = create_header("ERROR", $msg, "query_device", "");
-    echo $responseData;
-    log_activity($dblink, $responseData);
-    die();
+	$responseData = create_header("ERROR", "Invalid device id or inactive", "add_equipment", "");
+	echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
 }
 //$device_id is valid if it's successful
 
 //check if manufacturer_id is valid and active
-
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?method=check_status&manufacturer_id=" . $manufacturer_id;
-$results = call_api($url);
-$resultsArray = json_decode($results, true);
-$status = trim(get_msg_status($resultsArray));
-$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
-
-if (strcmp($status, "ERROR") == 0)
+$manufacturer_valid = query_manufacturer($manufacturer_id);
+if (!$manufacturer_valid)
 {
-    $responseData = create_header("ERROR", $msg, "query_manufacturer", "");
+	$responseData = create_header("ERROR", "Invalid manufacturer is or inactive", "query_manufacturer", "");
     echo $responseData;
     log_activity($dblink, $responseData);
     die();
 }
 //manufacturer is in db if it's successfull
 
-$serial_number = trim($serial_number);
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?method=check_duplicates&serial_number=" . $serial_number;
-$results = call_api($url);
-$resultsArray = json_decode($results, true);
-$status = trim(get_msg_status($resultsArray));
-$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
-
-if (strcmp($status, "ERROR") == 0)
+//check if there is an existing serial number already
+$serial_available = query_serial_number($serial_number);
+if (!$serial_available)
 {
-    $responseData = create_header("ERROR", $msg, "query_serial_number", "");
-    echo $responseData;
-    log_activity($dblink, $responseData);
-    die();
-}
-
-if (strcmp($status, "Success") == 0)
-{
+	$responseData = create_header("ERROR", "Duplicate serial entry found", "add_equipment", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
+} else {
 	$sql = "INSERT INTO serial_numbers (device_id, manufacturer_id, serial_number) 
 	VALUES ('$device_id', '$manufacturer_id', '$serial_number')";
 	
@@ -113,6 +89,7 @@ if (strcmp($status, "Success") == 0)
 		log_activity($dblink, $responseData);
 		die();
 	}
+	
 	$responseData = create_header("Success", "Equipment successfully added!", "add_equipment", "");
 	echo $responseData;
 	log_activity($dblink, $responseData);
