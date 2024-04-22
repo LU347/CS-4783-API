@@ -57,17 +57,12 @@ if (strcmp($method, "get_manufacturer") == 0 || strcmp($method, "check_status") 
 if (strcmp($method, "check_manufacturer_duplicate") == 0) 
 {
 	if ($manufacturer == NULL) {
-		$responseData = create_header("ERROR", "Manufacturer name is invalid or missing", "query_manufacturer", "");
+		$responseData = create_header("ERROR", "Manufacturer name is missing", "query_manufacturer", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
-	} elseif (ctype_digit($manufactuer)) {
-		$responseData = create_header("ERROR", "Manufacturer name is fully numeric", "query_manufacturer", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	} elseif (preg_match('~[0-9]+~', $manufacturer)) {
-		$responseData = create_header("ERROR", "Manufacturer name contains numbers", "query_device", "");
+	} elseif (!($is_clean = check_string_format($manufacturer))) {
+		$responseData = create_header("ERROR", "Invalid manufacturer format", "query_manufacturer", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();

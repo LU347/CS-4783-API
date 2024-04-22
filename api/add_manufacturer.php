@@ -3,9 +3,6 @@
 https://stackoverflow.com/questions/3938021/how-to-check-for-special-characters-php
 */
 $dblink = db_connect("equipment");
-
-$manufacturer = trim(urldecode($manufacturer));
-
 if (!$dblink)
 {
 	$responseData = create_header("ERROR", "ERROR connecting to database", "add_manufacturer", "");
@@ -13,19 +10,16 @@ if (!$dblink)
 	die();
 }
 
+$manufacturer = trim(urldecode($manufacturer));
+
 if ($manufacturer == NULL)
 {
 	$responseData = create_header("ERROR", "Invalid or missing manufacturer", "add_manufacturer", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
-} elseif (ctype_digit($manufacturer)) {
-	$responseData = create_header("ERROR", "Manufacturer is fully numeric", "add_manufacturer", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
-} elseif (!preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $manufacturer)) {
-	$responseData = create_header("ERROR", "Invalid manufacturer name", "add_manufacturer", "");
+} elseif (!($is_clean = check_string_format($manufacturer))) {
+	$responseData = create_header("ERROR", "Invalid manufacturer format", "add_manufacturer", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();

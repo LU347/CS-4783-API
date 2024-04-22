@@ -155,14 +155,14 @@ function query_serial_number($serial_number)
 	return false;
 }
 
-function check_device_format($device_type)
+function check_string_format($string)
 {
-	if (ctype_digit($device_type))
+	if (ctype_digit($string))
 	{
 		return false;
 	}
 	
-	if (!preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $device_type))
+	if (!preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $string))
 	{
 		return false;
 	}

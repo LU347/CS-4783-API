@@ -8,12 +8,39 @@ if (!$dblink)
 	die();
 }
 
+$search_methods = ['device', 'manufacturer', 'serial_number', 'all'];
+
 if ($search_by == NULL)
 {
-	$responseData = create_header("ERROR", "Invalid Search Condition", "search_equipment", "");
-	echo $responseData;
+	$responseData = create_header("ERROR", "Invalid search condition", "search_equipment", "");
 	log_activity($dblink, $responseData);
+	echo $responseData;
 	die();
+} elseif (!($is_clean = check_string_format($search_by))) {
+	$responseData = create_header("ERROR", "Invalid search condition format", "search_equipment", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
+} elseif (!in_array($search_by, $search_methods)) {
+	$responseData = create_header("ERROR", "Invalid search method", "search_equipment", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
+}
+
+switch($search_by)
+{
+	case "device":
+		include("search_device.php");
+		break;
+	case "manufacturer":
+		break;
+	case "serial_number":
+		break;
+	case "all":
+		break;
+	default:
+		break;
 }
 
 //Check if device or manufacturer is valid
