@@ -2,6 +2,7 @@
 /*
 	Required parameters per method:
 	get_manufacturer needs $manufacturer_id
+	check_status needs $manufacturer_id
 	
 	check_manufacturer_duplicate needs $manufacturer
 	
@@ -16,7 +17,7 @@ if (!$dblink)
 	die();
 }
 
-$method_array = ['get_manufacturer', 'check_manufacturer_duplicate'];
+$method_array = ['get_manufacturer', 'check_manufacturer_duplicate', 'check_status'];
 
 if ($method == NULL)
 {
@@ -37,14 +38,14 @@ if ($method == NULL)
 }
 
 //Checking if $manufacturer_id is valid
-if (strcmp($method, "get_manufacturer") == 0) 
+if (strcmp($method, "get_manufacturer") == 0 || strcmp($method, "check_status") == 0) 
 {
 	if ($manufacturer_id == NULL) {
 		$responseData = create_header("ERROR", "Manufacturer ID is missing", "query_manufacturer", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
-	} elseif (!ctype_digit($manufactuer_id)) {
+	} elseif (!ctype_digit($manufacturer_id)) {
 		$responseData = create_header("ERROR", "Manufacturer ID is invalid", "query_manufacturer", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
@@ -81,7 +82,8 @@ if (strcmp($method, "get_manufacturer") == 0)
 	try {
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
-		$responseData = create_header("ERROR", "Error with sql: $e", "query_manufacturer", "");
+		$errorMsg = "ERROR with sql: " . $e;
+		$responseData = create_header("ERROR", $errorMsg, "query_manufacturer", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
@@ -100,7 +102,36 @@ if (strcmp($method, "get_manufacturer") == 0)
 		echo $responseData;
 		die();
 	}
-} elseif (strcmp($method, "check_manufacturer_duplicate") == 0) {	
+}
+
+if (strcmp($method, "check_status") == 0)
+{
+	$sql = "SELECT auto_id FROM manufacturers WHERE status='ACTIVE' AND auto_id =" . $manufacturer_id;
+	try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$errorMsg = "ERROR with sql: " . $e;
+		$responseData = create_header("ERROR", $errorMsg, "query_manufacturer", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	if ($result->num_rows > 0) {
+		$responseData = create_header("Success", "Manufacturer found and active", "query_manufacturer", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	$responseData = create_header("ERROR", "Manufacturer could not be found or inactive", "query_manufacturer", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
+}
+
+if (strcmp($method, "check_manufacturer_duplicate") == 0) 
+{	
 	$sql = "SELECT auto_id FROM manufacturers WHERE manufacturer = '$manufacturer'";
 	try {
 		$result = $dblink->query($sql);
@@ -128,7 +159,6 @@ if (strcmp($method, "get_manufacturer") == 0)
 }
 $responseData = create_header("ERROR", "Unknown Error occured", "query_manufacturer", "");
 log_activity($dblink, $responseData);
-$dblink->close();
 echo $responseData;
 die();
 ?>

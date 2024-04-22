@@ -1,5 +1,11 @@
 <?php
 $dblink = db_connect("equipment");
+if (!$dblink) 
+{
+	$responseData = create_header("ERROR", "Failed to connect to database", "add_equipment", "");
+	echo $responseData;
+	die();
+}
 
 if ($device_id == NULL)
 {
@@ -7,10 +13,12 @@ if ($device_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} else {
-	//check if device_id is valid and active
-	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?device_id=";
-} 
+} elseif (!ctype_digit($device_id)) {
+		$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+}
 
 if ($manufacturer_id == NULL)
 {
@@ -18,29 +26,77 @@ if ($manufacturer_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
+} elseif (!ctype_digit($manufacturer_id)) {
+		$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "query_manufacturer", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
 }
 
 if ($serial_number == NULL)
 {
-	$responseData = create_header("ERROR", "Missing serial number ID", "None", "");
+	$responseData = create_header("ERROR", "Missing serial number ID", "add_equipment", "");
     echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
+} elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬]/', $serial_number)) {
+    $responseData = create_header("ERROR", "Invalid serial number", "add_equipment", "");
+    echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
+} elseif (!preg_match('/SN-[\d\w]+/', $serial_number)) {
+	$responseData = create_header("ERROR", "Invalid serial format", "add_equipment", "");
+	echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
 }
 
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?serial_number=" . $serial_number . "&method=check_duplicate";
-$serial_query_result = call_api($url);
-
-$resultsArray = json_decode($serial_query_result, true); //turns result into array
+//check if device_id is valid and active
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_status&device_id=" . $device_id;
+$results = call_api($url);
+$resultsArray = json_decode($results, true);
 $status = trim(get_msg_status($resultsArray));
 $msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
 
 if (strcmp($status, "ERROR") == 0)
 {
-	$responseData = create_header("ERROR", $msg, "query_serial_number", "");
+    $responseData = create_header("ERROR", $msg, "query_device", "");
     echo $responseData;
-	log_activity($dblink, $responseData);
-	die();
+    log_activity($dblink, $responseData);
+    die();
+}
+//$device_id is valid if it's successful
+
+//check if manufacturer_id is valid and active
+
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?method=check_status&manufacturer_id=" . $manufacturer_id;
+$results = call_api($url);
+$resultsArray = json_decode($results, true);
+$status = trim(get_msg_status($resultsArray));
+$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+if (strcmp($status, "ERROR") == 0)
+{
+    $responseData = create_header("ERROR", $msg, "query_manufacturer", "");
+    echo $responseData;
+    log_activity($dblink, $responseData);
+    die();
+}
+//manufacturer is in db if it's successfull
+
+$serial_number = trim($serial_number);
+$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_serial_number?method=check_duplicates&serial_number=" . $serial_number;
+$results = call_api($url);
+$resultsArray = json_decode($results, true);
+$status = trim(get_msg_status($resultsArray));
+$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+if (strcmp($status, "ERROR") == 0)
+{
+    $responseData = create_header("ERROR", $msg, "query_serial_number", "");
+    echo $responseData;
+    log_activity($dblink, $responseData);
+    die();
 }
 
 if (strcmp($status, "Success") == 0)
@@ -62,5 +118,9 @@ if (strcmp($status, "Success") == 0)
 	log_activity($dblink, $responseData);
 	die();
 }
-$dblink->close();
+
+$responseData = create_header("ERROR", "Unknown Error occured", "add_equipment", "");
+log_activity($dblink, $responseData);
+echo $responseData;
+die();
 ?>

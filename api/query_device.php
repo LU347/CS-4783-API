@@ -195,7 +195,6 @@ if (strcmp($method, "check_status") === 0)
 }
 $responseData = create_header("ERROR", "Unknown Error occured", "query_device", "");
 log_activity($dblink, $responseData);
-$dblink->close();
 echo $responseData;
 die();
 ?>

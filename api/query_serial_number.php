@@ -45,7 +45,7 @@ if (strcmp($method, "get_auto_id") === 0)
 	}
 }
 
-if (strcmp($method, "check_duplicate") == 0)
+if (strcmp($method, "check_duplicates") == 0)
 {
 	$sql = "SELECT auto_id FROM serial_numbers WHERE serial_number = " . "'" . $serial_number . "'" ;
 	try {
@@ -72,6 +72,8 @@ if (strcmp($method, "check_duplicate") == 0)
 		die();
 	}
 }
-$dblink->close();
+$responseData = create_header("ERROR", "Unknown Error occured", "query_serial_number", "");
+log_activity($dblink, $responseData);
+echo $responseData;
 die();
 ?>
