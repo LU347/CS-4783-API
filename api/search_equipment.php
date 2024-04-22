@@ -45,13 +45,20 @@ if ($search_by == "device")
 		die();
 	}
 	
-	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 10000";
+	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 1000";
 	
 	try {
 		$result = $dblink->query($sql);
 	} catch (Exception $e) {
-		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
+		$responseData = create_header("ERROR", "Error with sql $e", "search_equipment", "");
 		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	if ($result->num_rows == 0)
+	{
+		$responseData = create_header("ERROR", "No results found", "search_equipment", "");
 		echo $responseData;
 		die();
 	}
@@ -121,6 +128,13 @@ if ($search_by == "manufacturer")
 	} catch (Exception $e) {
 		$responseData = create_header("Error", "Error with sql $e", "search_equipment", "");
 		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	if ($result->num_rows == 0)
+	{
+		$responseData = create_header("ERROR", "No results found", "search_equipment", "");
 		echo $responseData;
 		die();
 	}
@@ -345,6 +359,8 @@ if ($search_by == "all")
 	echo $responseData;
 	die();
 }
-$dblink->close();
+$responseData = create_header("ERROR", "Unknown Error occured", "search_equipment", "");
+log_activity($dblink, $responseData);
+echo $responseData;
 die();
 ?>
