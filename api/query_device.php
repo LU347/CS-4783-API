@@ -44,25 +44,20 @@ if ($method == NULL)
 //Checking $device_type input
 if (strcmp($method, "get_device_id") === 0 || strcmp($method, "check_duplicates") === 0)
 {
+	$device_type = urldecode($device_type);
+	
 	if ($device_type == NULL)
 	{
 		$responseData = create_header("ERROR", "Device type is missing", "query_device", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
-	} elseif (ctype_digit($device_type)) {   //|| !ctype_alnum($device_type does not allow mobile phone or device types with space
-		$responseData = create_header("ERROR", "Device type contains special characters or is fully numeric", "query_device", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	} elseif (preg_match('~[0-9]+~', $device_type)) {
-		$responseData = create_header("ERROR", "Device type contains numbers", "query_device", "");
+	} elseif (!($is_clean = check_device_format($device_type))) {
+		$responseData = create_header("ERROR", "Invalid device format", "add_device", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
 	}
-	
-	$device_type = urldecode($device_type);
 }
 
 //Checking $device_id input

@@ -221,3 +221,7 @@ form input[type=submit] {
 .home-page {
 	margin-top: 50px;
 }
+
+input[type="text"] {
+	text-transform: uppercase;
+}

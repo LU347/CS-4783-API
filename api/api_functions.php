@@ -154,4 +154,18 @@ function query_serial_number($serial_number)
 	
 	return false;
 }
+
+function check_device_format($device_type)
+{
+	if (ctype_digit($device_type))
+	{
+		return false;
+	}
+	
+	if (!preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $device_type))
+	{
+		return false;
+	}
+	return true;
+}
 ?>
