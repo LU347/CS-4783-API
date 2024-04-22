@@ -179,7 +179,8 @@ if (isset($_POST['submit_new_device']))
 if (isset($_POST['submit_new_manufacturer']))
 {
     $new_manufacturer = trim($_POST['new_manufacturer']);
-    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer_id=" . $new_manufacturer;
+	$encoded_manufacturer = urlencode($new_manufacturer);
+    $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_manufacturer?manufacturer=" . $encoded_manufacturer;
 
     $result = call_api($url);
     $resultsArray = json_decode($result, true);

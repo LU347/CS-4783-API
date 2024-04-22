@@ -1,24 +1,24 @@
 <?php
 $dblink = db_connect("equipment");
 
-$device_type = urldecode($device_type);
+$device_type = trim(urldecode($device_type));
 
 if ($device_type == NULL)
 {
-    $responseData = create_header("ERROR", "Device type is missing", "query_device", "");
+    $responseData = create_header("ERROR", "Device type is missing", "add_device", "");
     log_activity($dblink, $responseData);
     echo $responseData;
     die();
-} elseif (ctype_digit($device_type) == true) {
+} elseif (ctype_digit($device_type)) {
     $responseData = create_header("ERROR", "Device type contains special characters or numbers", "query_device", "");
     log_activity($dblink, $responseData);
     echo $responseData;
     die();
-} elseif (preg_match('~[0-9]+~', $device_type)) {
-    $responseData = create_header("ERROR", "Invalid Device type: contains numbers", "query_device", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
+} elseif (!preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $device_type)) {
+	$responseData = create_header("ERROR", "Invalid device name", "add_device", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
 }
 
 $encoded_device = urlencode($device_type);
@@ -32,7 +32,6 @@ if (strcmp($status, "ERROR") == 0) //Duplicate found
 {
 	$responseData = create_header("ERROR", $msg, "query_device", "");
 	log_activity($dblink, $responseData);
-	$dblink->close();
     echo $responseData;
 	die();
 } 
@@ -49,21 +48,18 @@ if (strcmp($status, "Success") == 0) // No duplicates were found
 		$errorMsg = "Error with SQL" . $e;
 		$responseData = create_header("ERROR", $errorMsg, "add_device", "");
 		log_activity($dblink, $responseData);
-		$dblink->close();
     	echo $responseData;
 		die();
 	}
-
+	
 	//Need to check if it was inserted properly somehow
 	$responseData = create_header("Success", "Device added successfully", "query_device", "");
 	log_activity($dblink, $responseData);
-	$dblink->close();
 	echo $responseData;
 	die();
 }
 $responseData = create_header("ERROR", "Unknown Error occured", "add_device", "");
 log_activity($dblink, $responseData);
-$dblink->close();
 echo $responseData;
 die();
 ?>

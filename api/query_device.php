@@ -11,6 +11,13 @@
 	fix $device_type validation = false error when $device_type is 2 words
 */
 $dblink = db_connect("equipment"); //check if db connect was successfful
+if (!$dblink)
+{
+	$responseData = create_header("ERROR", "ERROR connecting to database", "query_device", "");
+	//cant log
+	echo $responseData;
+	die();
+}
 //TODO: Prevent SQL Injection
 //TODO: Redo logging
 $method_array = ['get_device_id', 'get_device_type', 'check_duplicates', 'check_status'];
@@ -22,7 +29,7 @@ if ($method == NULL)
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
-} elseif (ctype_digit($method) == true) {
+} elseif (ctype_digit($method)) {
 	$responseData = create_header("ERROR", "Method contains special characters or numbers", "query_device", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
@@ -43,7 +50,7 @@ if (strcmp($method, "get_device_id") === 0 || strcmp($method, "check_duplicates"
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
-	} elseif (ctype_digit($device_type) == true) {   //|| !ctype_alnum($device_type does not allow mobile phone or device types with space
+	} elseif (ctype_digit($device_type)) {   //|| !ctype_alnum($device_type does not allow mobile phone or device types with space
 		$responseData = create_header("ERROR", "Device type contains special characters or is fully numeric", "query_device", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;
@@ -67,7 +74,7 @@ if (strcmp($method, "get_device_type") == 0 || strcmp($method, "check_status") =
 		log_activity($dblink, $responseData);
 		echo $responseData;
 		die();
-	} elseif (ctype_digit($device_id) == false) {
+	} elseif (!ctype_digit($device_id)) {
 		$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
 		log_activity($dblink, $responseData);
 		echo $responseData;

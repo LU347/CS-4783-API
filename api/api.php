@@ -20,6 +20,7 @@ switch($endPoint)
 		break;
 	case "add_manufacturer":
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$manufacturer = $_REQUEST['manufacturer'];
 		include("add_manufacturer.php");
 		break;
 	case "query_device":
@@ -30,6 +31,7 @@ switch($endPoint)
 		break;
 	case "query_manufacturer":
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$manufacturer = $_REQUEST['manufacturer'];
 		$method = $_REQUEST['method'];
 		include("query_manufacturer.php");
 		break;
