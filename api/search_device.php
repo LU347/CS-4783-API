@@ -31,7 +31,17 @@ if (!$device_valid)
 
 if ($device_valid)
 {
-	$sql = "SELECT auto_id, manufacturer_id, serial_number FROM serial_numbers WHERE device_id =" . $device_id . " LIMIT 1000";
+	$sql = "
+		SELECT device_type, manufacturer, serial_number
+		FROM serial_numbers
+		INNER JOIN manufacturers
+		INNER JOIN devices
+		ON serial_numbers.manufacturer_id = manufacturers.auto_id 
+		AND serial_numbers.device_id = devices.auto_id
+		AND devices.auto_id = $device_id
+		AND manufacturers.status = 'ACTIVE' AND devices.status = 'ACTIVE'
+		LIMIT 1000;
+	";
 	
     try {
         $result = $dblink->query($sql);
@@ -51,23 +61,8 @@ if ($device_valid)
 
     while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
     {
-        //need to get manufacturer type per row so each row looks like:
-        //hide auto id?
-        //auto_id, computer, apple, serialnumber
-        $manufacturer = "";
-        $manu_sql = "SELECT manufacturer FROM manufacturers WHERE auto_id =".$equipment_data['manufacturer_id'];
-        try {
-            $manu_query_result = $dblink->query($manu_sql);
-            $manu_data = $manu_query_result->fetch_array(MYSQLI_ASSOC);
-        } catch (Exception $e) {
-            $errorMsg = "Error with sql: " . $e;
-            $responseData = create_header("ERROR", $errorMsg, "search_equipment", "");
-            log_activity($dblink, $responseData);
-            echo $responseData;
-            die();
-        }
-        $row = $device_type . "," . $manu_data['manufacturer'] . "," . $equipment_data['serial_number'];
-        $payload[$equipment_data['auto_id']] = $row;
+        $row = $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
+        $payload[] = $row;
     }	
     $responseData = create_header("Success", "Search by device success", "search_equipment", json_encode($payload));
     echo $responseData;
