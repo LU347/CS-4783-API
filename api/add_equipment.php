@@ -13,7 +13,7 @@ if ($device_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} elseif (!($is_digit = check_if_digit($device_id))) {
+} elseif (!(ctype_digit($device_id))) {
 	$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
@@ -26,7 +26,7 @@ if ($manufacturer_id == NULL)
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
-} elseif (!($is_digit = check_if_digit($manufacturer_id))) {
+} elseif (!(ctype_digit($manufacturer_id))) {
 	$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "query_manufacturer", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
