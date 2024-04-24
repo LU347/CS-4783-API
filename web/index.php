@@ -30,7 +30,7 @@
 				
                   if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentAdded")
 				  {
-					  echo "<div class='parent'><div class='successNotification'><p>Equipment successfully updated!</div></div>";
+					  echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";
 				  }
 				
                   if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "DeviceAdded")
@@ -40,7 +40,7 @@
 				  
 			      if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "ManufacturerAdded")
 				  {
-					  echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully updated!</div></div>";
+					  echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully added!</div></div>";
 				  }
 				 ?>
                 <div class="parent">

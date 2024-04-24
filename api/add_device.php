@@ -1,5 +1,11 @@
 <?php
 $dblink = db_connect("equipment");
+if (!$dblink)
+{
+	$responseData = create_header("ERROR", "ERROR connecting to database", "add_device", "");
+	echo $responseData;
+	die();
+}
 
 $device_type = trim(urldecode($device_type));
 

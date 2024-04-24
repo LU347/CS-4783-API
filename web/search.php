@@ -32,7 +32,6 @@
 					?>
 					<div class="search-grid">
 						<div class="form-container">
-							<h2><em>strict search so, device && manufacturer && serial</em></h2>
 							<form method="POST" action="">
 								<label for="device_id">Device Type:</label><br>
 								<select name="device_id">
@@ -90,7 +89,7 @@
 							<br>
 							<form method="POST" action="">
 								<label for="serial_number">Search by Serial Number:</label>
-								<input type="text" name="serial_number" id="serialInput" placeholder="Format: SN-XXXXXXXXXX..">
+								<input type="text" name="serial_number" id="serialInput" placeholder="Format: SN-xxxxx...">
 								<button type="submit" value="submit-search-serial" name="submit-search-serial">Search Serial Number</button>
 							</form>
 						</div>
@@ -107,7 +106,7 @@ if (isset($_POST['submit-search']))
     $search_by = "all";
     $device_id = $_POST['device_id'];
 	$manufacturer_id = $_POST['manufacturer_id'];
-	$serial_number = $_POST['serial_number'];
+	$serial_number = strtoupper($_POST['serial_number']);
 	header("Location: search_results.php?search_by=$search_by&device_id=$device_id&manufacturer_id=$manufacturer_id&serial_number=$serial_number");
 	die();
 }
@@ -136,7 +135,7 @@ if (isset($_POST['submit-search-manufacturer']))
 ob_start();
 if (isset($_POST['submit-search-serial']))
 {
-    $search_by = "serial_number";
+    $search_by = "serial";
     $serial_number = $_POST['serial_number'];
 	header("Location: search_results.php?search_by=$search_by&serial_number=$serial_number");
 	die();

@@ -223,5 +223,5 @@ form input[type=submit] {
 }
 
 #serialInput{
-	text-transform: uppercase;
+	text-transform: lowercase;
 }

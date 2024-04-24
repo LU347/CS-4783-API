@@ -78,10 +78,19 @@ function check_serial_format($serial_number)
 	if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬]/', $serial_number)) 
 	{
 		return false;
-	} elseif (!preg_match('/SN-[\d\w]+/', $serial_number)) {
+	} 
+	/*
+	elseif (!preg_match('/SN-[\d\w]+/', $serial_number)) {
 		return false;
 	}
+	*/
 	return true;
+}
+
+function format_serial($serial)
+{
+	$split_serial = explode("-", $serial);
+	return $split_serial[0] . "-" . strtolower($split_serial[1]);
 }
 
 function check_if_digit($id) 

@@ -126,7 +126,7 @@ if (isset($_POST['submit']))
     $url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/add_equipment";
     $device = $_POST['device_id'];
     $manufacturer = $_POST['manufacturer_id'];
-    $serialNumber = strtoupper(trim($_POST['serial_number']));
+    $serialNumber = trim($_POST['serial_number']);
 
     $newUrl = $url . "?device_id=" . $device . "&manufacturer_id=" . $manufacturer . "&serial_number=" . $serialNumber;	//concatenates args
     $result = call_api($newUrl);	//calls add_equipment 
