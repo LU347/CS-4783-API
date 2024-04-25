@@ -177,4 +177,25 @@ function check_string_format($string)
 	}
 	return true;
 }
+
+function display_results($result)
+{
+    $resultArray = json_decode($result, true);
+    $status = get_msg_status($resultArray);
+
+    if (strcmp($status, "Success") == 0) {
+        $data = get_data($resultArray);
+
+        echo "<pre>";
+        echo print_r($data);
+        echo "</pre>";
+    }
+
+    if (strcmp($status, "ERROR") == 0) {
+        $msg = explode("MSG:", $resultArray[1]);
+
+        echo "<h2>$msg[1]</h2>";
+
+    }
+}
 ?>

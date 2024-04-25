@@ -47,7 +47,7 @@ if ($serial_number == NULL)
 }
 
 //Preserves the uppercase of SN and changes the rest of the string into lowercase
-$serial_number = format_serial($serial_number);
+//$serial_number = format_serial($serial_number);
 
 //check if device_id is valid and active
 $device_valid = query_device($device_id);
