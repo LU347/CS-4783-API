@@ -10,6 +10,7 @@
                 <li><a href="search.php">Search Equipment</a></li>
                 <li><a href="add.php">Add Equipment</a></li>
 				<li><a href="update.php">Update Equipment</a></li>
+				<li><a href="view.php">View Equipment</a></li>
             </ul>
         </nav>
         <main>
@@ -69,8 +70,8 @@
                         <div class="card">
                             <h3>View Equipment</h3>
                             <p><em>View all equipment or a single entry</em></p>
-                            <a href="view.html">
-								<button name="update-button">Go to View Page</button>
+                            <a href="view.php">
+								<button name="view-button">Go to View Page</button>
 							</a>
                         </div>
                     </div>

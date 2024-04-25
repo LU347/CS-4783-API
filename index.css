@@ -240,4 +240,5 @@ form input[type=submit] {
 .view-table th, td {
 	padding: 1rem;
 	text-align: left;
+	color: black;
 }

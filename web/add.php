@@ -10,7 +10,7 @@
                 <li><a href="search.php">Search Equipment</a></li>
                 <li><a href="">Add Equipment</a></li>
 				<li><a href="update.php">Update Equipment</a></li>
-				<li><a href="view.php">Update Equipment</a></li>
+				<li><a href="view.php">View Equipment</a></li>
             </ul>
         </nav>
         <main>
