@@ -274,3 +274,8 @@ h2 {
 .search-bar button:hover {
 	background-color: royalblue;
 }
+
+.add-device {
+	width: 100%;
+	height: 250px;
+}

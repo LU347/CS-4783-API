@@ -24,6 +24,12 @@
 				  {
 					  echo "<div class='parent'><div class='successNotification'><p>Manufacturer successfully updated!</div></div>";
 				  }
+				
+				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "EquipmentUpdated")
+				  {
+					  echo "<div class='parent'><div class='successNotification'><p>Equipment successfully added!</div></div>";
+				  }
+				
 				  if (isset($_REQUEST['msg']) && $_REQUEST['msg'] == "SerialUpdated")
 				  {
 					  echo "<div class='parent'><div class='successNotification'><p>Serial Number successfully updated!</div></div>";

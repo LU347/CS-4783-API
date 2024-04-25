@@ -58,15 +58,11 @@
 							<input type="text" id="serialInput" name="serial_number" placeholder="Format: SN-090912309asd"><br>
 							<button type="submit" value="submit" name="submit">Submit Equipment</button>
 						</form>
+						<div class="parent">
+							<button onclick="toggleNewForms()">Click Here to Add a New Device or Manufacturer</button>
+						</div>
 					</div>
-		
                 </div>
-				<div class="parent">
-					<div class="new-device-manu-grid">
-						<em>Need to add a new device or manufacturer?</em>
-						<button onclick="toggleNewForms()">Click Here to Add a New Device or Manufacturer</button>
-					</div>
-				</div>
             </section>
 			<section class="new-device-manu" id="newForms" style="display: none">
 				<div class="new-form-container">

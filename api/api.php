@@ -75,9 +75,6 @@ switch($endPoint)
 		$device_id = $_REQUEST['device_id'];
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
 		$serial_number = $_REQUEST['serial_number'];
-		$new_device_id = $_REQUEST['new_device_id'];
-		$new_manufacturer_id = $_REQUEST['new_manufacturer_id'];
-		$new_serial_number = $_REQUEST['new_serial_number'];
 		include("update_equipment.php");
 	case "query_device_refactor":
 		$device_type = $_REQUEST['device_type'];

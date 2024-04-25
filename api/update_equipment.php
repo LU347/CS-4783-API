@@ -1,82 +1,108 @@
 <?php
-/*
-$device_id = $_REQUEST['device_id'];
-$updated_str = $_REQUEST['updated_str'];
-*/
 $dblink = db_connect("equipment");
 
 if ($device_id == NULL)
 {
-	$responseData = create_header("ERROR", "Device ID missing or invalid", "update_device", "");
+	$responseData = create_header("ERROR", "Invalid or missing device ID", "update_equipment", "");
+    echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
+} elseif (!(ctype_digit($device_id))) {
+	$responseData = create_header("ERROR", "Device ID is not numeric", "update_equipment", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
 
-if ($updated_str == NULL)
+if ($manufacturer_id == NULL)
 {
-	$responseData = create_header("ERROR", "Missing new device type", "update_device", "");
+	$responseData = create_header("ERROR", "Invalid or missing manufacturer ID", "update_equipment", "");
+    echo $responseData;
 	log_activity($dblink, $responseData);
-	echo $responseData;
 	die();
-} else if (ctype_digit($updated_str) == true)
-{
-	$responseData = create_header("ERROR", "New device is not a string", "update_device", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
-}
-
-//need to query_device to see if the device id is valid, then get update the device id with the updated str
-$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=get_device_type&device_id=" . $device_id;
-$result = call_api($url);
-$resultsArray = json_decode($result, true); //turns result into array
-$status = trim(get_msg_status($resultsArray));
-
-if (strcmp($status, "ERROR") == 0)
-{
-	$responseData = create_header("ERROR", "Invalid Device Id", "query_device", "");
+} elseif (!(ctype_digit($manufacturer_id))) {
+	$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "update_equipment", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
 }
 
-if (strcmp($status, "Success") == 0) //There is a device associated with the given id
+if ($serial_number == NULL)
 {
-	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_duplicates&device_type=" . $updated_str;
-	$result = call_api($url);
-	$resultsArray = json_decode($result, true);
-	$status = trim(get_msg_status($resultsArray));
-	
-	if (strcmp($status, "ERROR") == 0) //means the updated device already exists
-    {
-		$responseData = create_header("ERROR", "The updated device is already in the database", "query_device", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-    }
-	
-	if (strcmp($status, "Success") == 0)
-    {
-		$sql = "UPDATE devices SET device_type ='" . strtolower($updated_str) . "' WHERE auto_id=" . $device_id;
-	try {
-		$result = $dblink->query($sql);
-	} catch (Exception $e) {
-		$responseData = create_header("ERROR", "Error with sql: $e", "update_device", "");
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	}
-	//TODO: Verify update was successfull
-	$responseData = create_header("Success", "Device updated", "update_device", "");
+	$responseData = create_header("ERROR", "Missing serial number", "update_equipment", "");
+    echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
+} elseif (!($is_clean = check_serial_format($serial_number))) {
+	$responseData = create_header("ERROR", "Invalid serial number", "update_equipment", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
-    }
 }
-$responseData = create_header("ERROR", "Unknown error occured", "update_device", "");
+
+//check if device_id is valid and active
+$device_valid = query_device($device_id);
+if (!$device_valid)
+{
+	$responseData = create_header("ERROR", "Invalid device id or inactive", "update_equipment", "");
+	echo $responseData;
+	log_activity($dblink, $responseData);
+	die();
+}
+//$device_id is valid if it's successful
+
+
+//check if manufacturer_id is valid and active
+$manufacturer_valid = query_manufacturer($manufacturer_id);
+if (!$manufacturer_valid)
+{
+	$responseData = create_header("ERROR", "Invalid manufacturer is or inactive", "update_equipment", "");
+    echo $responseData;
+    log_activity($dblink, $responseData);
+    die();
+}
+
+$sql = "UPDATE serial_numbers SET device_id=" . $device_id . ", manufacturer_id=" . $manufacturer_id . " WHERE serial_number='" . $serial_number . "'";
+
+try {
+    $result = $dblink->query($sql);
+} catch (Exception $e) {
+    $responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
+}
+
+$verify_sql = "
+    SELECT * FROM serial_numbers 
+    WHERE device_id =" . $device_id . " 
+    AND manufacturer_id=" . $manufacturer_id . " 
+    AND serial_number='" . $serial_number . "'";
+
+try {
+    $result = $dblink->query($verify_sql);
+} catch (Exception $e) {
+    $responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
+}
+
+$rows_found = $result->num_rows;
+if ($rows_found > 0) {
+    $responseData = create_header("Success", "Device updated", "update_equipment", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
+} else {
+    $responseData = create_header("ERROR", "No equipment updated", "update_equipment", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
+}
+
+$responseData = create_header("ERROR", "Unknown error occured", "update_equipment", "");
 log_activity($dblink, $responseData);
 echo $responseData;
-$dblink->close();
 die();
 ?>
