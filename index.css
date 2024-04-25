@@ -73,32 +73,38 @@ h1 {
 	border: 1px solid rgba(2, 2, 2, 1);
 }
 
+h2 {
+	color: red;
+}
+
 .active-link {
     background-color: #52796F;
 }
 
 .parent {
-	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
     margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
+	width: 100%;
 }
 
-form * {
-    margin: 1rem;
+.form * {
+	margin: 1rem;
 }
 
-form label {
+.form label {
     font-size: 1.5rem;
 }
 
-form select, input[type=text]{
+.form select, .form input[type=text]{
     width: 100%;
     height: 1.875rem;
 }
 
-form input[type=submit] {
+.form input[type=submit] {
     width: 25%;
     height: 2em;
 }
@@ -172,9 +178,7 @@ form input[type=submit] {
 }
 
 .search-results-container {
-	width: 90%;
 	height: auto;
-	background-color: rgba(45, 45, 45, 0.702);
 	margin: 20px;
 	display: flex;
 	align-content:center;
@@ -239,6 +243,34 @@ form input[type=submit] {
 
 .view-table th, td {
 	padding: 1rem;
-	text-align: left;
+	text-align: center;
 	color: black;
+}
+
+.search-bar {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: space-evenly;
+	width: 75%;
+	border: 1px solid black;
+}
+
+.search-bar label {
+	vertical-align: middle;
+	margin: 5px 5px 5px 0;
+	padding: 10px;
+	border: 1px solid #ddd;
+	color: black;
+}
+
+.search-bar button {
+	padding: 10px 20px;
+	background-color: dodgerblue;
+	border: 1px solid #ddd;
+	color: white;
+}
+
+.search-bar button:hover {
+	background-color: royalblue;
 }

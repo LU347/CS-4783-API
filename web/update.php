@@ -53,7 +53,7 @@
 			</section>
 			<section class="new-device-manu" id="deviceForms" style="display: none">
 				<div class="new-form-container">
-					<form method="POST" action="">
+					<form method="POST" class="form" action="">
 						<label for="devices">Select Device:</label>
 						<select name="new_device_id">
 								<option selected disabled>Choose Here</option>
@@ -73,7 +73,7 @@
 			</section>
 			<section class="new-device-manu" id="manuForms" style="display: none">
 				<div class="new-form-container">
-					<form method="POST" action="">
+					<form method="POST" class="form" action="">
 						<label for="manufacturers">Select Manufacturer:</label>
 						<select name="manufacturer_id">
 								<option selected disabled>Choose Here</option>
@@ -93,7 +93,7 @@
 			</section>
 			<section class="new-device-manu" id="serialForms" style="display: none">
 				<div class="new-form-container">
-					<form method="POST" action="">
+					<form method="POST" class="form" action="">
 						<label for="serial-input">Input Serial Number (exact):</label>
 						<input type="text" name="serial_number" placeholder="Example: SN-XXXXX"><br>
 						<label for="device-input">Update Serial Number (exact) to:</label>

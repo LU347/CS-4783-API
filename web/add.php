@@ -31,7 +31,7 @@
 						$manufacturers = get_msg_data($resultsArray);
 					?>
 					<div class="form-container">
-						<form method="POST" action="">
+						<form method="POST" class="form" action="">
 							<label for="devices">Device Type:</label>
 							<select name="device_id">
 								<option selected disabled>Choose Here</option>
@@ -70,13 +70,13 @@
             </section>
 			<section class="new-device-manu" id="newForms" style="display: none">
 				<div class="new-form-container">
-					<form method="POST" action="">
+					<form method="POST" class="form" action="">
 						<label for="devices">New Device:</label>
 						<input type="text" name="device_type" placeholder="Example: Computer"><br>
 						<button type="submit" value="submit_new_device" name="submit_new_device">Submit</button>
 					</form>
 					
-					<form method="POST" action="">
+					<form method="POST" class="form" action="">
 						<label for="devices">New Manufacturer:</label>
 						<input type="text" name="new_manufacturer" placeholder="Example: Apple"><br>
 						<button type="submit" value="submit_new_manufacturer" name="submit_new_manufacturer">Submit</button>

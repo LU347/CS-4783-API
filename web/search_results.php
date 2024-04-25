@@ -14,12 +14,10 @@
             </ul>
         </nav>
         <main>
+            <div class="parent"><h1>Search Results</h1></div>        
             <section class="search-results-page">
-                <div class="parent">
-                    <h1>Search Results</h1>
-                </div>
 				<div class="search-results-container">
-					<div class="container">
+					<div class="parent">
 						<?php
 						  ob_start();
 						  include("../api/api_functions.php");

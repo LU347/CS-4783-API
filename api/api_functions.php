@@ -185,16 +185,34 @@ function display_results($result)
 
     if (strcmp($status, "Success") == 0) {
         $data = get_data($resultArray);
+		$num_results = count($data);
+		
+		echo "<table class='view-table' style='overflow-x:auto;'>
+            <tr>
+              <th>DEVICE TYPE</th>
+              <th>MANUFACTURER</th>
+              <th>SERIAL NUMBER</th>
+            </tr>";
 
-        echo "<pre>";
-        echo print_r($data);
-        echo "</pre>";
+		for ($i = 0; $i < $num_results; $i++) {
+			$row = explode(",", $data[$i]);
+			echo "<tr>";
+			for ($j = 0; $j < 3; $j++) {
+				echo "<td>";
+				echo $row[$j];
+				echo "</td>";
+			}
+			echo "</tr>";
+		}
+		
+		echo "</table>";
     }
 
     if (strcmp($status, "ERROR") == 0) {
         $msg = explode("MSG:", $resultArray[1]);
-
+		echo "<div class=parent>";
         echo "<h2>$msg[1]</h2>";
+		echo "</div>";
 
     }
 }

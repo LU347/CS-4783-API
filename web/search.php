@@ -33,7 +33,7 @@
 					?>
 					<div class="search-grid">
 						<div class="form-container">
-							<form method="POST" action="">
+							<form method="POST" class="form" action="">
 								<label for="device_id">Device Type:</label><br>
 								<select name="device_id">
 									<option selected disabled>Choose Here</option>
@@ -60,7 +60,7 @@
 							</form>
 						</div>
 						<div class="form-container">
-							<form method="POST" action="">
+							<form method="POST" class="form" action="">
 								<label for="device_id">Search by Device Type:</label>
 								<select name="device_id">
 									<option selected disabled>Choose Here</option>
@@ -74,7 +74,7 @@
 								<button type="submit" value="submit-search-device" name="submit-search-device">Search Device</button>
 							</form>
 							<br>
-							<form method="POST" action="">
+							<form method="POST" class="form" action="">
 								<label for="manufacturer_id">Search by Manufacturer:</label>
 								<select name="manufacturer_id">
 									<option selected disabled>Choose Here</option>
@@ -88,7 +88,7 @@
 								<button type="submit" value="submit-search-manufacturer" name="submit-search-manufacturer">Search Manufacturer</button>
 							</form>
 							<br>
-							<form method="POST" action="">
+							<form method="POST" class="form" action="">
 								<label for="serial_number">Search by Serial Number:</label>
 								<input type="text" name="serial_number" id="serialInput" placeholder="Format: SN-xxxxx...">
 								<button type="submit" value="submit-search-serial" name="submit-search-serial">Search Serial Number</button>

@@ -46,6 +46,9 @@ switch($endPoint)
 	case "list_manufacturers":
 		include("list_manufacturers.php");
 		break;
+	case "list_all_equipment":
+		include("list_all_equipment.php");
+		break;
 	case "search_equipment":
 		$search_by = $_REQUEST['search_by'];
 		$device_id = $_REQUEST['device_id'];
@@ -68,6 +71,14 @@ switch($endPoint)
 		$updated_str = $_REQUEST['updated_str'];
 		include("update_serial_number.php");
 		break;
+	case "update_equipment":
+		$device_id = $_REQUEST['device_id'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$serial_number = $_REQUEST['serial_number'];
+		$new_device_id = $_REQUEST['new_device_id'];
+		$new_manufacturer_id = $_REQUEST['new_manufacturer_id'];
+		$new_serial_number = $_REQUEST['new_serial_number'];
+		include("update_equipment.php");
 	case "query_device_refactor":
 		$device_type = $_REQUEST['device_type'];
 		$device_id = $_REQUEST['device_id'];
