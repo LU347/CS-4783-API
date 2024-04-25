@@ -27,6 +27,11 @@
 				?>
 				<div class="parent">
                     <div class="update-home-grid">
+						<div class="card">
+                            <h3>Update Equipment</h3>
+                            <p><em>Update Existing Equipment</em></p>
+                            <button name="update-equipment" onclick="location.href='../web/update_equipment.php'">Click to Update Equipment</button>
+                        </div>
                         <div class="card">
                             <h3>Update Device</h3>
                             <p><em>Update an existing device type</em></p>
@@ -125,30 +130,32 @@
 		//todo: refactor
 		function toggleNewForms()
 		{
-			console.log(event.target.name);
 			let buttonName = event.target.name;
-			if (buttonName == "update-device")
-            {
-              let div = document.getElementById("deviceForms");
-              if (div.style.display === "none") {
-                  div.style.display = "block";
-              } else {
-                  div.style.display = "none";
-              }
-            } else if (buttonName == "update-manufacturer") {
-              let div = document.getElementById("manuForms");
-              if (div.style.display === "none") {
-                  div.style.display = "block";
-              } else {
-                  div.style.display = "none";
-              }
-            } else if (buttonName == "update-serial") {
-			  let div = document.getElementById("serialForms");
-              if (div.style.display === "none") {
-                  div.style.display = "block";
-              } else {
-                  div.style.display = "none";
-              }
+			let formName = "";
+			
+			switch (buttonName) {
+				case 'update-device':
+					formName = "deviceForms";
+					break;
+				case 'update-manufacturer':
+					formName = "manuForms";
+					break;
+				case 'update-serial':
+					formName = "serialForms";
+					break;
+				case 'update-equipment':
+					formName = "equipmentForms";
+					break;
+				default:
+					console.log("Unknown button name");
+					break;
+			}
+			
+			let div = document.getElementById(formName);
+            if (div.style.display === "none") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
             }
 		}
 	</script>
