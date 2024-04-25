@@ -225,3 +225,19 @@ form input[type=submit] {
 #serialInput{
 	text-transform: lowercase;
 }
+
+.view-table {
+	width: 75%;
+	display: flex;
+	justify-content: center;
+	margin: auto;
+	padding: 0.5rem;
+	color: black;
+	border: 1px solid #000000;
+	background-color:#53535301;
+}
+
+.view-table th, td {
+	padding: 1rem;
+	text-align: left;
+}

@@ -66,6 +66,13 @@
 								<button name="update-button">Go to Update Page</button>
 							</a>
                         </div>
+                        <div class="card">
+                            <h3>View Equipment</h3>
+                            <p><em>View all equipment or a single entry</em></p>
+                            <a href="view.html">
+								<button name="update-button">Go to View Page</button>
+							</a>
+                        </div>
                     </div>
                 </div>
             </section>
