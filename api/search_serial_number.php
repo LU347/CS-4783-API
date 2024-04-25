@@ -24,7 +24,7 @@ if ($is_clean = check_serial_format($serial_number))
     INNER JOIN devices
     ON serial_numbers.manufacturer_id = manufacturers.auto_id 
     AND serial_numbers.device_id = devices.auto_id
-    AND serial_number LIKE '$serial_number'
+    AND serial_number LIKE '%$serial_number'
     AND manufacturers.status = 'ACTIVE' AND devices.status = 'ACTIVE'
     LIMIT 1000
 ";
@@ -56,4 +56,8 @@ if ($is_clean = check_serial_format($serial_number))
         die();
 	}  
 }
+$responseData = create_header("ERROR", "Unknown Error occured", "search_serial_number", "");
+log_activity($dblink, $responseData);
+echo $responseData;
+die();
 ?>

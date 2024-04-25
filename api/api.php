@@ -76,12 +76,6 @@ switch($endPoint)
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
 		$serial_number = $_REQUEST['serial_number'];
 		include("update_equipment.php");
-	case "query_device_refactor":
-		$device_type = $_REQUEST['device_type'];
-		$device_id = $_REQUEST['device_id'];
-		$method = $_REQUEST['method'];
-		include("query_device_refactor.php");
-		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');

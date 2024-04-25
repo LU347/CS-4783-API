@@ -1,20 +1,8 @@
 <?php
-/*
-	Required parameters per method:
-	get_device_id requires a valid device type [done]
-	check_duplicates requires a valid device type [done]
-	
-	get_device_type requires a valid device id [done]
-	check_status requires a valid device id [done]
-	TODO:
-	get devices depending on $status = "ACTIVE" || "INACTIVE"
-	fix $device_type validation = false error when $device_type is 2 words
-*/
-$dblink = db_connect("equipment"); //check if db connect was successfful
+$dblink = db_connect("equipment");
 if (!$dblink)
 {
 	$responseData = create_header("ERROR", "ERROR connecting to database", "query_device", "");
-	//cant log
 	echo $responseData;
 	die();
 }

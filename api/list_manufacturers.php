@@ -1,5 +1,11 @@
 <?php
 $dblink = db_connect( "equipment" );
+if (!$dblink)
+{
+	$responseData = create_header("ERROR", "ERROR connecting to db", "list_manufacturers", "");
+	echo $responseData;
+	die();
+}
 $sql = "SELECT `auto_id`, `manufacturer`  FROM `manufacturers` WHERE `status` = 'ACTIVE'";
 $result = "";
 $manufacturers = array();
@@ -13,14 +19,10 @@ try {
 	die();
 }
 
-if ($result->num_rows == 0)
+$rows_found = $result->num_rows;
+if ($rows_found > 0)
 {
-	$responseData = create_header("ERROR", "No manufacturers found", "list_manufacturers", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
-} else {
-	while ( $data = $result->fetch_array( MYSQLI_ASSOC ) ) {
+   while ( $data = $result->fetch_array( MYSQLI_ASSOC ) ) {
   		$manufacturers[ $data[ 'auto_id' ] ] = $data[ 'manufacturer' ];
 	}
 	$jsonManufacturers = json_encode($manufacturers);
@@ -28,7 +30,15 @@ if ($result->num_rows == 0)
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
+} else {
+    $responseData = create_header("ERROR", "No results found", "list_manufacturers", "");
+    log_activity($dblink, $responseData);
+    echo $responseData;
+    die();
 }
-$dblink->close();
+
+$responseData = create_header("ERROR", "Unknown Error occured", "list_manufacturers", "");
+log_activity($dblink, $responseData);
+echo $responseData;
 die();
 ?>

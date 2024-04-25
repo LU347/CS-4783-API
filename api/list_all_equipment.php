@@ -44,5 +44,10 @@ if ($rows_found > 0)
     log_activity($dblink, $responseData);
     echo $responseData;
     die();
-}  
+}
+
+$responseData = create_header("ERROR", "Unknown Error occured", "list_all_equipment", "");
+log_activity($dblink, $responseData);
+echo $responseData;
+die();
 ?>

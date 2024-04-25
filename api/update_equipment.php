@@ -1,5 +1,11 @@
 <?php
 $dblink = db_connect("equipment");
+if (!$dblink)
+{
+	$responseData = create_header("ERROR", "ERROR connecting to DB", "update_equipment", "");
+	echo $resopnseData;
+	die();
+}
 
 if ($device_id == NULL)
 {

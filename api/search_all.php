@@ -69,7 +69,7 @@ if ($is_clean = check_serial_format($serial_number))
       INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
       WHERE serial_numbers.device_id = $device_id
 		AND serial_numbers.manufacturer_id = $manufacturer_id
-		AND serial_numbers.serial_number LIKE '$serial_number'
+		AND serial_numbers.serial_number LIKE '%$serial_number'
 		AND manufacturers.status = 'ACTIVE' 
 		AND devices.status = 'ACTIVE' 
 	  LIMIT 1000
