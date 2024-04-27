@@ -76,6 +76,14 @@ switch($endPoint)
 		$manufacturer_id = $_REQUEST['manufacturer_id'];
 		$serial_number = $_REQUEST['serial_number'];
 		include("update_equipment.php");
+		break;
+	case "new_search":
+		$status = $_REQUEST['status'];
+		$device_id = $_REQUEST['device_id'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$serial_number = $_REQUEST['serial_number'];
+		include("new_search.php");
+		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');

@@ -93,13 +93,6 @@ function format_serial($serial)
 	return $split_serial[0] . "-" . strtolower($split_serial[1]);
 }
 
-function check_if_digit($id) 
-{
-	if (!ctype_digit($id))
-		return false;
-	return true;
-}
-
 function query_device($device_id)
 {
 	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_status&device_id=" . $device_id;
@@ -215,5 +208,16 @@ function display_results($result)
 		echo "</div>";
 
     }
+}
+
+function validate_int($int)
+{
+	//https://www.w3schools.com/php/php_filter.asp
+	if (filter_var($int, FILTER_VALIDATE_INT) === 0 || !filter_var($int, FILTER_VALIDATE_INT) === false) {
+		return true;
+	} else {
+		return false;
+	}
+	return false;
 }
 ?>

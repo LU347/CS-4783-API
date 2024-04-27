@@ -70,7 +70,7 @@
 								</select>
 								<label for="serial_number">Serial Number:</label><br>
 								<input type="text" name="serial_number" id="serialInput" placeholder="Format: SN-xxxxx..">
-								<button type="submit" value="submit" name="submit">Search</button>
+								<button type="submit" value="submit" name="submit">Update</button>
 							</form>
 						</div>
 					</div>
