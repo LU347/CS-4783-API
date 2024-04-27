@@ -154,7 +154,6 @@ if ($manufacturer_id && (!$device_id && !$serial_number)) {
 
 if ($serial_number && (!$device_id && !$manufacturer_id)) {
 	//search by serial
-	echo "search by serial number";
 	if ($serial_number === NULL) {
 		$responseData = create_header("ERROR", "Invalid serial number format", "new_search", "");
 		log_activity($dblink, $responseData);
