@@ -31,6 +31,7 @@ if ($device_id)
 {	
 	if ($status && $updated_str === NULL) {
 		//user wants to update status
+		$status = strtoupper($status);
 		$options = ['ACTIVE', 'INACTIVE'];
 		
 		if (!in_array($status, $options)) {
