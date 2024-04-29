@@ -90,6 +90,12 @@ switch($endPoint)
 		$updated_str = $_REQUEST['updated_str'];
 		include("new_update_device.php");
 		break;
+	case "new_update_manufacturer":
+		$status = $_REQUEST['status'];
+		$manufacturer_id = $_REQUEST['manufacturer_id'];
+		$updated_str = $_REQUEST['updated_str'];
+		include("new_update_manufacturer.php");
+		break;
     default:
         header('Content-Type: application/json');
         header('HTTP/1.1 200 OK');
