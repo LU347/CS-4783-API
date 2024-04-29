@@ -114,6 +114,26 @@ function query_device($device_id)
 	return false;
 }
 
+function query_device_duplicate($device_type)
+{
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_device?method=check_duplicates&device_type=" . $device_type;
+	$results = call_api($url);
+	$resultsArray = json_decode($results, true);
+	$status = trim(get_msg_status($resultsArray));
+	
+	if (strcmp($status, "Success") == 0) //no duplicates found
+	{
+		return true;
+	}
+	
+	if (strcmp($status, "ERROR") == 0) //duplicate found
+	{
+		return false;
+	}
+		
+	return false;
+}
+
 function query_manufacturer($manufacturer_id)
 {
 	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?method=check_status&manufacturer_id=" . $manufacturer_id;
