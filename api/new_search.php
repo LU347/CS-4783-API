@@ -6,31 +6,6 @@ if (!$dblink) {
 	die();
 }
 
-switch($status) {
-	case "ACTIVE":
-		$limiter = "
-		AND manufacturers.status = 'ACTIVE'
-		AND devices.status = 'ACTIVE' ";
-		break;
-	case "INACTIVE":
-		$limiter = "
-		AND manufacturers.status = 'INACTIVE'
-		OR devices.status = 'INACTIVE' ";
-		break;
-	case "BOTH":
-		$limiter = "
-		AND manufacturers.status = 'ACTIVE' 
-		OR manufacturers.status = 'INACTIVE'
-		AND devices.status = 'ACTIVE'
-		OR devices.stauts = 'INACTIVE' ";
-		break;
-	default:
-		$limiter = "
-		AND manufacturers.status = 'ACTIVE'
-		AND devices.status = 'ACTIVE' ";
-		break;
-}
-
 if ($device_id && (!$manufacturer_id && !$serial_number)) {
 	//search by device
 	if (!$valid = validate_int($device_id)) {
@@ -49,46 +24,26 @@ if ($device_id && (!$manufacturer_id && !$serial_number)) {
 			echo $responseData;
 			die();
 		}
+		$limiter = " AND manufacturers.status = 'ACTIVE'";
+	}
+	
+    if (strcmp($status, "INACTIVE") === 0) {
+		$limiter = " AND manufacturers.status = 'INACTIVE'";
+	}
+	
+	if (strcmp($status, "BOTH") === 0) {
+		$limiter = " AND (manufacturers.status = 'INACTIVE' OR manufacturers.status = 'ACTIVE')";
 	}
 	
 	$sql = "
-		SELECT devices.status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
+		SELECT manufacturers.status AS manufacturer_status, devices.status AS device_status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
 		FROM serial_numbers
 		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
 		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
-		WHERE serial_numbers.device_id = $device_id
+		WHERE (serial_numbers.device_id = $device_id)
 			$limiter
 		LIMIT 1000;
 	";
-	
-	try {
-        $result = $dblink->query($sql);
-    } catch (Exception $e) {
-        $responseData = create_header("ERROR", "Error with sql $e", "new_search", "");
-        log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-    }
-	
-	$rows_found = $result->num_rows;
-	if ($rows_found > 0)
-	{
-		while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
-    	{
-			//row = status, device_type, manufacturer, serial_number
-			$row = $equipment_data['status'] . "," . $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
-			$payload[] = $row;
-    	}	
-		$responseData = create_header("Success", "Found $rows_found row(s)", "new_search", json_encode($payload));
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	} else {
-		$responseData = create_header("ERROR", "No results found", "new_search", "");
-		log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-	}  
 	
 } 
 
@@ -110,46 +65,26 @@ if ($manufacturer_id && (!$device_id && !$serial_number)) {
 			echo $responseData;
 			die();
 		}
+		$limiter = " AND devices.status = 'ACTIVE'";
+	}
+	
+	if (strcmp($status, "INACTIVE") === 0) {
+		$limiter = " AND devices.status = 'INACTIVE'";
+	}
+	
+	if (strcmp($status, "BOTH") === 0) {
+		$limiter = " AND (devices.status = 'INACTIVE' OR devices.status = 'ACTIVE')";
 	}
 	
 	$sql = "
-		SELECT devices.status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
+		SELECT manufacturers.status AS manufacturer_status , devices.status AS device_status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
 		FROM serial_numbers
 		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
 		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
-		WHERE serial_numbers.manufacturer_id = $manufacturer_id
+		WHERE (serial_numbers.manufacturer_id = $manufacturer_id AND manufacturers.auto_id = $manufacturer_id)
 			$limiter
 		LIMIT 1000;
-	";
-	
-	try {
-        $result = $dblink->query($sql);
-    } catch (Exception $e) {
-        $responseData = create_header("ERROR", "Error with sql $e", "new_search", "");
-        log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-    }
-	
-	$rows_found = $result->num_rows;
-	if ($rows_found > 0)
-	{
-		while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
-    	{
-			//row = status, device_type, manufacturer, serial_number
-			$row = $equipment_data['status'] . "," . $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
-			$payload[] = $row;
-    	}	
-		$responseData = create_header("Success", "Found $rows_found row(s)", "new_search", json_encode($payload));
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	} else {
-		$responseData = create_header("ERROR", "No results found", "new_search", "");
-		log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-	}  
+	"; 
 }
 
 if ($serial_number && (!$device_id && !$manufacturer_id)) {
@@ -167,43 +102,14 @@ if ($serial_number && (!$device_id && !$manufacturer_id)) {
 	}
 	
 	$sql = "
-		SELECT devices.status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
+		SELECT manufacturers.status AS manufacturer_status , devices.status AS device_status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
 		FROM serial_numbers
 		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
 		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
 		WHERE serial_numbers.serial_number LIKE '%$serial_number'
 			$limiter
 		LIMIT 1000;
-	";
-	
-	try {
-        $result = $dblink->query($sql);
-    } catch (Exception $e) {
-        $responseData = create_header("ERROR", "Error with sql $e", "new_search", "");
-        log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-    }
-	
-	$rows_found = $result->num_rows;
-	if ($rows_found > 0)
-	{
-		while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
-    	{
-			//row = status, device_type, manufacturer, serial_number
-			$row = $equipment_data['status'] . "," . $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
-			$payload[] = $row;
-    	}	
-		$responseData = create_header("Success", "Found $rows_found row(s)", "new_search", json_encode($payload));
-		log_activity($dblink, $responseData);
-		echo $responseData;
-		die();
-	} else {
-		$responseData = create_header("ERROR", "No results found", "new_search", "");
-		log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-	}  
+	";  
 }
 
 if ($device_id && $manufacturer_id && $serial_number) {
@@ -241,7 +147,7 @@ if ($device_id && $manufacturer_id && $serial_number) {
 	}
 	
 	$sql = "
-		SELECT devices.status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
+		SELECT manufacturers.status AS manufacturer_status , devices.status AS device_status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
 		FROM serial_numbers
 		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
 		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
@@ -251,25 +157,32 @@ if ($device_id && $manufacturer_id && $serial_number) {
 			$limiter
 		LIMIT 1000;
 	";
-	
-	try {
-        $result = $dblink->query($sql);
-    } catch (Exception $e) {
-        $responseData = create_header("ERROR", "Error with sql $e", "new_search", "");
-        log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
-    }
-	
+}
+
+//Run SQL Statement
+if (!empty($sql))
+{
+		try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$responseData = create_header("ERROR", "Error with sql $e", "new_search", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+
 	$rows_found = $result->num_rows;
 	if ($rows_found > 0)
 	{
+
 		while ($equipment_data = $result->fetch_array(MYSQLI_ASSOC))
-    	{
+		{
 			//row = status, device_type, manufacturer, serial_number
-			$row = $equipment_data['status'] . "," . $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
+			$manu_status = $equipment_data['manufacturer_status'];
+			$device_status = $equipment_data['device_status'];
+			$row = $manu_status . "," . $device_status . "," . $equipment_data['device_type'] . "," . $equipment_data['manufacturer'] . "," . $equipment_data['serial_number'];
 			$payload[] = $row;
-    	}	
+		}	
 		$responseData = create_header("Success", "Found $rows_found row(s)", "new_search", json_encode($payload));
 		log_activity($dblink, $responseData);
 		echo $responseData;
@@ -277,11 +190,11 @@ if ($device_id && $manufacturer_id && $serial_number) {
 	} else {
 		$responseData = create_header("ERROR", "No results found", "new_search", "");
 		log_activity($dblink, $responseData);
-        echo $responseData;
-        die();
+		echo $responseData;
+		die();
 	}  
 }
-
+	
 $responseData = create_header("ERROR", "Invalid or missing search method", "new_search", "");
 log_activity($dblink, $responseData);
 echo $responseData;
