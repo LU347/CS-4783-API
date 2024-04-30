@@ -7,7 +7,7 @@ if (!$dblink)
 	die();
 }
 
-if ($device_id === NULL)
+if ($device_id === NULL || empty($device_id))
 {
 	$responseData = create_header("ERROR", "Device id is missing", "update_device", "");
 	log_activity($dblink, $reponseData);
@@ -28,7 +28,7 @@ I have to list inactive and active devices?
 
 if ($device_id)
 {	
-	if ($status && $updated_str === NULL) {
+	if ($status && ($updated_str === NULL || empty($updated_str))) {
 		//user wants to update status
 		$status = strtoupper($status);
 		$options = ['ACTIVE', 'INACTIVE'];
@@ -52,8 +52,9 @@ if ($device_id)
 		";
 	}
 	
-	if ($updated_str && !$status) {
+	if ($updated_str && (!$status || empty($status))) {
 		//user wants to update device name
+		$updated_str = urldecode($updated_str);
 		if (ctype_digit($updated_str) == true) {
 			$responseData = create_header("ERROR","Invalid device name format", "update_device", "");
 			log_activity($dblink, $responseData);
@@ -85,6 +86,7 @@ if ($device_id)
 	
 	if ($updated_str && $status) {
 		//user wants to update device and status
+		$updated_str = urldecode($updated_str);
 		$status = strtoupper($status);
 		$options = ['ACTIVE', 'INACTIVE'];
 		
@@ -157,7 +159,6 @@ if ($device_id)
 $responseData = create_header("ERROR", "Unknown error occured", "update_device", "");
 log_activity($dblink, $responseData);
 echo $responseData;
-$dblink->close();
 die();
 
 ?>

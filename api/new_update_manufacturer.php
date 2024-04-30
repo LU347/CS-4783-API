@@ -7,7 +7,7 @@ if (!$dblink)
 	die();
 }
 
-if ($manufacturer_id === NULL)
+if ($manufacturer_id === NULL || empty($manufacturer_id))
 {
 	$responseData = create_header("ERROR", "manufacturer id is missing", "update_manufacturer", "");
 	log_activity($dblink, $reponseData);
@@ -22,7 +22,7 @@ if ($manufacturer_id === NULL)
 
 if ($manufacturer_id)
 {	
-	if ($status && $updated_str === NULL) {
+	if ($status && ($updated_str === NULL || empty($updated_str))) {
 		//user wants to update status
 		$status = strtoupper($status);
 		$options = ['ACTIVE', 'INACTIVE'];
@@ -46,8 +46,10 @@ if ($manufacturer_id)
 		";
 	}
 	
-	if ($updated_str && !$status) {
+	if ($updated_str && (!$status || empty($status))) {
 		//user wants to update manufacturer name
+		$updated_str = urldecode($updated_str);
+		
 		if (ctype_digit($updated_str) == true) {
 			$responseData = create_header("ERROR","Invalid manufacturer name format", "update_manufacturer", "");
 			log_activity($dblink, $responseData);
@@ -84,6 +86,7 @@ if ($manufacturer_id)
 	
 	if ($updated_str && $status) {
 		//user wants to update manufacturer and status
+		$updated_str = urldecode($updated_str);
 		$status = strtoupper($status);
 		$options = ['ACTIVE', 'INACTIVE'];
 		
@@ -161,7 +164,6 @@ if ($manufacturer_id)
 $responseData = create_header("ERROR", "Unknown error occured", "update_manufacturer", "");
 log_activity($dblink, $responseData);
 echo $responseData;
-$dblink->close();
 die();
 
 ?>
