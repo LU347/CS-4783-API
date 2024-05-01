@@ -36,8 +36,8 @@ $msg = trim(substr($resultsArray[1],4));
 if (strcmp($status, "ERROR") == 0)
 {
 	$responseData = create_header("ERROR", $msg, "query_manufacturer", "");
-	echo $responseData;
 	log_activity($dblink, $responseData);
+	echo $responseData;
 	die();
 }
 
@@ -52,19 +52,18 @@ if (strcmp($status, "Success") == 0)	//Manufacturer wasn't found
 	} catch (Exception $e) {
 		$errorMsg = "Error with SQL: " . $e;
 		$responseData = create_header("ERROR", $errorMsg, "add_manufacturer", "");
-		echo $responseData;
 		log_activity($dblink, $responseData);
+		echo $responseData;
 		die();
 	}
 	
 	$responseData = create_header("Success", "Manufacturer successfully added!", "add_manufacturer", "");
-	echo $responseData;
 	log_activity($dblink, $responseData);
+	echo $responseData;
 	die();
 }
 $responseData = create_header("ERROR", "Unknown Error occured", "add_manufacturer", "");
 log_activity($dblink, $responseData);
-$dblink->close();
 echo $responseData;
 die();
 ?>

@@ -6,8 +6,12 @@ if (!$dblink) {
 	die();
 }
 
+if ($status)
+	$status = strtoupper($status);
+
 if ($device_id && (!$manufacturer_id && !$serial_number)) {
 	//search by device
+	
 	if (!$valid = validate_int($device_id)) {
 		$responseData = create_header("ERROR", "Invalid device ID format", "new_search", "");
 		log_activity($dblink, $responseData);
@@ -44,7 +48,6 @@ if ($device_id && (!$manufacturer_id && !$serial_number)) {
 			$limiter
 		LIMIT 1000;
 	";
-	
 } 
 
 if ($manufacturer_id && (!$device_id && !$serial_number)) {

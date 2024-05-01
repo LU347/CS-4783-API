@@ -14,7 +14,7 @@ if ($device_id == NULL)
 	log_activity($dblink, $responseData);
 	die();
 } elseif (!(ctype_digit($device_id))) {
-	$responseData = create_header("ERROR", "Device ID is not numeric", "query_device", "");
+	$responseData = create_header("ERROR", "Device ID is not numeric", "add_equipment", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
@@ -22,12 +22,12 @@ if ($device_id == NULL)
 
 if ($manufacturer_id == NULL)
 {
-	$responseData = create_header("ERROR", "Invalid or missing device ID", "query_manufacturer", "");
+	$responseData = create_header("ERROR", "Invalid or missing manufacturer ID", "add_equipment", "");
     echo $responseData;
 	log_activity($dblink, $responseData);
 	die();
 } elseif (!(ctype_digit($manufacturer_id))) {
-	$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "query_manufacturer", "");
+	$responseData = create_header("ERROR", "Manufacturer ID is not numeric", "add_equipment", "");
 	log_activity($dblink, $responseData);
 	echo $responseData;
 	die();
