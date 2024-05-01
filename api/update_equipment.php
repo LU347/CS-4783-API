@@ -57,7 +57,6 @@ if (!$device_valid)
 }
 //$device_id is valid if it's successful
 
-
 //check if manufacturer_id is valid and active
 $manufacturer_valid = query_manufacturer($manufacturer_id);
 if (!$manufacturer_valid)
@@ -68,45 +67,50 @@ if (!$manufacturer_valid)
     die();
 }
 
-$sql = "UPDATE serial_numbers SET device_id=" . $device_id . ", manufacturer_id=" . $manufacturer_id . " WHERE serial_number='" . $serial_number . "'";
+if ($device_valid && $manufacturer_valid) 
+{
+	$sql = "
+	UPDATE serial_numbers 
+	SET device_id=" . $device_id . ", manufacturer_id=" . $manufacturer_id . ", serial_number='" . $serial_number .
+	"' WHERE serial_number='" . $serial_number . "'";
+	
+	try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
 
-try {
-    $result = $dblink->query($sql);
-} catch (Exception $e) {
-    $responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
+	$verify_sql = "
+		SELECT * FROM serial_numbers 
+		WHERE device_id =" . $device_id . " 
+		AND manufacturer_id=" . $manufacturer_id . " 
+		AND serial_number LIKE '" . $serial_number . "'";
+
+	try {
+		$result = $dblink->query($verify_sql);
+	} catch (Exception $e) {
+		$responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+
+	$rows_found = $result->num_rows;
+	if ($rows_found > 0) {
+		$responseData = create_header("Success", "Device updated", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	} else {
+		$responseData = create_header("ERROR", "No equipment updated", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
 }
-
-$verify_sql = "
-    SELECT * FROM serial_numbers 
-    WHERE device_id =" . $device_id . " 
-    AND manufacturer_id=" . $manufacturer_id . " 
-    AND serial_number='" . $serial_number . "'";
-
-try {
-    $result = $dblink->query($verify_sql);
-} catch (Exception $e) {
-    $responseData = create_header("ERROR", "Error with sql: $e", "update_equipment", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
-}
-
-$rows_found = $result->num_rows;
-if ($rows_found > 0) {
-    $responseData = create_header("Success", "Device updated", "update_equipment", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
-} else {
-    $responseData = create_header("ERROR", "No equipment updated", "update_equipment", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
-}
-
 $responseData = create_header("ERROR", "Unknown error occured", "update_equipment", "");
 log_activity($dblink, $responseData);
 echo $responseData;
