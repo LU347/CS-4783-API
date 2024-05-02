@@ -6,8 +6,24 @@ if (!$dblink) {
 	die();
 }
 
+$status_methods = ['ACTIVE', 'INACTIVE', 'BOTH'];
+
 if ($status)
+{
 	$status = strtoupper($status);
+	
+	if (!in_array($status, $status_methods)) {
+		$responseData = create_header("ERROR", "Invalid Status", "new_search", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+} elseif ($status === NULL || empty($status)) {
+	$responseData = create_header("ERROR", "Missing status", "new_search", "");
+	log_activity($dblink, $responseData);
+	echo $responseData;
+	die();
+}
 
 if ($device_id && (!$manufacturer_id && !$serial_number)) {
 	//search by device
@@ -23,7 +39,7 @@ if ($device_id && (!$manufacturer_id && !$serial_number)) {
 	{
 		$is_active = query_device($device_id);
 		if (!$is_active) {
-			$responseData = create_header("ERROR", "Inactive device ID", "new_search", "");
+			$responseData = create_header("ERROR", "Inactive or invalid device ID", "new_search", "");
 			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
@@ -63,7 +79,7 @@ if ($manufacturer_id && (!$device_id && !$serial_number)) {
 	{
 		$is_active = query_manufacturer($manufacturer_id);
 		if (!$is_active) {
-			$responseData = create_header("ERROR", "Inactive manufacturer ID", "new_search", "");
+			$responseData = create_header("ERROR", "Inactive or invalid manufacturer ID", "new_search", "");
 			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
@@ -109,10 +125,44 @@ if ($serial_number && (!$device_id && !$manufacturer_id)) {
 		FROM serial_numbers
 		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
 		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
-		WHERE serial_numbers.serial_number LIKE '%$serial_number'
+		WHERE (serial_numbers.serial_number LIKE '%$serial_number' OR serial_numbers.serial_number LIKE '$serial_number%' OR serial_numbers.serial_number LIKE '%$serial_number%')
 			$limiter
 		LIMIT 1000;
 	";  
+}
+
+if ($device_id && $manufacturer_id && (!$serial_number))
+{
+	//user wants all devices? of a specific manufacturer
+	$device_valid = validate_int($device_id);
+	$manu_valid = validate_int($manufacturer_id);
+	if ($device_valid === false || $manu_valid === false) {
+		$responseData = create_header("ERROR", "Invalid device or manufacturer ID format", "new_search", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+	
+	if (strcmp($status, "ACTIVE") === 0) {
+		$limiter = "AND devices.status = 'ACTIVE' AND manufacturers.status = 'ACTIVE'";
+	}
+	
+	//I dont think showing only inactive results would work since both parameters should be active?
+	
+	if (strcmp($status, "BOTH") === 0) {
+		$limiter = "AND (devices.status = 'INACTIVE' OR devices.status = 'ACTIVE')
+			OR (manufacturers.status = 'INACTIVE' OR manufacturers.status = 'ACTIVE')";
+	}
+	
+	$sql = "
+		SELECT manufacturers.status AS manufacturer_status, devices.status AS device_status, devices.device_type, manufacturers.manufacturer, serial_numbers.serial_number
+		FROM serial_numbers
+		INNER JOIN manufacturers ON serial_numbers.manufacturer_id = manufacturers.auto_id
+		INNER JOIN devices ON serial_numbers.device_id = devices.auto_id
+		WHERE (serial_numbers.device_id = $device_id AND serial_numbers.manufacturer_id = $manufacturer_id)
+			$limiter
+		LIMIT 1000
+	";
 }
 
 if ($device_id && $manufacturer_id && $serial_number) {

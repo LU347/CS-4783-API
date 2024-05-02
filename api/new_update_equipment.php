@@ -12,7 +12,7 @@ if (!$dblink)
 	die();
 }
 
-if ($new_device && (empty($new_manu) && empty($new_serial))) 
+if (!empty($new_device) && (empty($new_manu) && empty($new_serial))) 
 {
 	//user only wants to update the equipment's device_id
 	if (!$valid = validate_int($new_device)) {
@@ -37,7 +37,7 @@ if ($new_device && (empty($new_manu) && empty($new_serial)))
     ";
 }
 
-if ($new_manu && (empty($new_device) && empty($new_serial))) 
+if (!empty($new_manu) && (empty($new_device) && empty($new_serial))) 
 {
 	//user only wants to update the equipment's manufacturer
 	if (!$valid = validate_int($new_manu)) {
@@ -62,7 +62,7 @@ if ($new_manu && (empty($new_device) && empty($new_serial)))
     ";
 }
 
-if ($new_serial && (empty($new_manu) || $new_manu == NULL && empty($new_device) || $new_device == NULL)) 
+if (!empty($new_serial) && (empty($new_manu) || $new_manu == NULL && empty($new_device) || $new_device == NULL)) 
 {
 	//user only wants to update the equipment's serial_number
 	if (!($is_clean = check_serial_format($new_serial))) {
@@ -96,7 +96,7 @@ if ($new_serial && (empty($new_manu) || $new_manu == NULL && empty($new_device) 
 	";
 }
 
-if ($new_device && $new_manu && (empty($new_serial) || $new_serial == NULL))
+if (!empty($new_device) && !empty($new_manu) && (empty($new_serial) || $new_serial == NULL))
 {
 	//user wants to update the equipment's device and manufacturer
     if (!$valid = validate_int($new_manu) || !$valid = validate_int($new_device)) {
@@ -143,7 +143,7 @@ if ($new_device && $new_manu && (empty($new_serial) || $new_serial == NULL))
 	";
 }
 
-if ($new_device && $new_manu && $new_serial)
+if (!empty($new_device) && !empty($new_manu) && !empty($new_serial))
 {
 	//user wants to update the equipment's device, manufacturer, and serial
 	if (!$valid = validate_int($new_manu) || !$valid = validate_int($new_device)) {
@@ -232,19 +232,19 @@ if (!empty($sql) && !empty($verify_sql))
 
     $rows_found = $result->num_rows;
     if ($rows_found > 0) {
-        $responseData = create_header("Success", "Device updated", "update_equipment", "");
+        $responseData = create_header("Success", "Equipment updated", "update_equipment", "");
         log_activity($dblink, $responseData);
         echo $responseData;
         die();
     } else {
-        $responseData = create_header("ERROR", "No device updated", "update_equipment", "");
+        $responseData = create_header("ERROR", "No equipment updated", "update_equipment", "");
         log_activity($dblink, $responseData);
         echo $responseData;
         die();
     }
 }
 
-$responseData = create_header("ERROR", "Unknown error occured", "update_equipment", "");
+$responseData = create_header("ERROR", "Missing parameters or Unknown error occured", "update_equipment", "");
 log_activity($dblink, $responseData);
 echo $responseData;
 die();

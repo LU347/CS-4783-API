@@ -233,11 +233,22 @@ function display_results($result)
 function validate_int($int)
 {
 	//https://www.w3schools.com/php/php_filter.asp
-	if (filter_var($int, FILTER_VALIDATE_INT) === 0 || !filter_var($int, FILTER_VALIDATE_INT) === false) {
-		return true;
+	if (filter_var($int, FILTER_VALIDATE_INT) === false) {
+		return false;
 	} else {
+		return true;
+	}
+	
+	if (preg_match('/^([a-zA-Z]+\s)*[a-zA-Z]+$/', $int))
+	{
 		return false;
 	}
+	
+	if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬]/', $int)) 
+	{
+		return false;
+	} 
+
 	return false;
 }
 ?>
