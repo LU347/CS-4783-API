@@ -41,6 +41,7 @@ switch($endPoint)
 		include("query_serial_number.php");
 		break;
 	case "list_devices":
+		$status = $_REQUEST['status'];
 		include("list_devices.php");
 		break;
 	case "list_manufacturers":

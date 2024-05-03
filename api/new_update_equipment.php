@@ -12,6 +12,26 @@ if (!$dblink)
 	die();
 }
 
+if ($device_id)
+{
+	if (!$valid = validate_int($device_id)) {
+		$responseData = create_header("ERROR", "Invalid device ID format", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+}
+
+if ($manufacturer_id)
+{
+	if (!$valid = validate_int($manufacturer_id)) {
+		$responseData = create_header("ERROR", "Invalid manufacturer ID format", "update_equipment", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
+}
+
 if (!empty($new_device) && (empty($new_manu) && empty($new_serial))) 
 {
 	//user only wants to update the equipment's device_id
