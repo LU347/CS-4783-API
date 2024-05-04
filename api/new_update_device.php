@@ -60,6 +60,11 @@ if ($device_id)
 			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
+		} elseif (!($is_clean = check_string_format($updated_str))) {
+			$responseData = create_header("ERROR", "Invalid device name format", "update_device", "");
+			log_activity($dblink, $responseData);
+			echo $responseData;
+			die();
 		}
 		
 		$is_available = query_device_duplicate($updated_str);
@@ -99,6 +104,11 @@ if ($device_id)
 		
 		if (ctype_digit($updated_str) == true) {
 			$responseData = create_header("ERROR","Invalid device name format", "update_device", "");
+			log_activity($dblink, $responseData);
+			echo $responseData;
+			die();
+		} elseif (!($is_clean = check_string_format($updated_str))) {
+			$responseData = create_header("ERROR", "Invalid device name format", "update_device", "");
 			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();

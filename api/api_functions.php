@@ -155,6 +155,27 @@ function query_manufacturer($manufacturer_id)
 	return false;
 }
 
+function check_manufacturer_duplicate($manufacturer)
+{
+	$url = "https://ec2-18-220-186-80.us-east-2.compute.amazonaws.com/api/query_manufacturer?method=check_manufacturer_duplicate&manufacturer=" . $manufacturer;
+	$results = call_api($url);
+	$resultsArray = json_decode($results, true);
+	$status = trim(get_msg_status($resultsArray));
+	$msg = trim(substr($resultsArray[1], 4)); //this should get the msg: line (if it's not json)
+
+	if (strcmp($status, "Success") == 0)
+	{
+		return true;
+	}
+	
+	if (strcmp($status, "ERROR") == 0)
+	{
+		return false;
+	}
+	
+	return false;
+}
+
 function query_serial_number($serial_number)
 {
 	$serial_number = trim($serial_number);

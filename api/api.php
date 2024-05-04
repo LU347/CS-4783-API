@@ -45,38 +45,8 @@ switch($endPoint)
 		include("list_devices.php");
 		break;
 	case "list_manufacturers":
+		$status = $_REQUEST['status'];
 		include("list_manufacturers.php");
-		break;
-	case "list_all_equipment":
-		include("list_all_equipment.php");
-		break;
-	case "search_equipment":
-		$search_by = $_REQUEST['search_by'];
-		$device_id = $_REQUEST['device_id'];
-		$manufacturer_id = $_REQUEST['manufacturer_id'];
-		$serial_number = $_REQUEST['serial_number'];
-		include("search_equipment.php");
-		break;
-	case "update_device":						
-		$device_id = $_REQUEST['device_id'];
-		$updated_str = $_REQUEST['updated_str'];
-		include("update_device.php");
-		break;
-	case "update_manufacturer":
-		$manufacturer_id = $_REQUEST['manufacturer_id'];
-		$updated_str = $_REQUEST['updated_str'];
-		include("update_manufacturer.php");
-		break;
-	case "update_serial_number":
-		$serial_number = $_REQUEST['serial_number'];
-		$updated_str = $_REQUEST['updated_str'];
-		include("update_serial_number.php");
-		break;
-	case "update_equipment":
-		$device_id = $_REQUEST['device_id'];
-		$manufacturer_id = $_REQUEST['manufacturer_id'];
-		$serial_number = $_REQUEST['serial_number'];
-		include("update_equipment.php");
 		break;
 	case "new_search":
 		$status = $_REQUEST['status'];

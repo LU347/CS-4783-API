@@ -62,7 +62,7 @@ if ($manufacturer_id)
 			die();
 		}
 		
-		$is_available = query_device_duplicate($updated_str);
+		$is_available = check_manufacturer_duplicate($updated_str);
 		if (!$is_available) {
 			$responseData = create_header("ERROR", "Duplicate manufacturer name found", "update_manufacturer", "");
 			log_activity($dblink, $responseData);
@@ -104,6 +104,14 @@ if ($manufacturer_id)
 			die();
 		} elseif (!($is_clean = check_string_format($updated_str))) {
 			$responseData = create_header("ERROR", "Invalid manufacturer format", "update_manufacturer", "");
+			log_activity($dblink, $responseData);
+			echo $responseData;
+			die();
+		}
+		
+		$is_available = check_manufacturer_duplicate($updated_str);
+		if (!$is_available) {
+			$responseData = create_header("ERROR", "Duplicate manufacturer name found", "update_manufacturer", "");
 			log_activity($dblink, $responseData);
 			echo $responseData;
 			die();
@@ -161,7 +169,7 @@ if ($manufacturer_id)
 	}
 }
 
-$responseData = create_header("ERROR", "Unknown error occured", "update_manufacturer", "");
+$responseData = create_header("ERROR", "Missing update method / Unknown error occurred", "update_manufacturer", "");
 log_activity($dblink, $responseData);
 echo $responseData;
 die();

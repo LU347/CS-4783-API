@@ -48,7 +48,7 @@ if (!empty($sql))
 }
 
 
-$responseData = create_header("ERROR", "Unknown Error occured", "list_devices", "");
+$responseData = create_header("ERROR", "Invalid Status / Unknown Error occurred", "list_devices", "");
 log_activity($dblink, $responseData);
 echo $responseData;
 die();

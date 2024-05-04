@@ -6,38 +6,49 @@ if (!$dblink)
 	echo $responseData;
 	die();
 }
-$sql = "SELECT `auto_id`, `manufacturer`  FROM `manufacturers` WHERE `status` = 'ACTIVE'";
-$result = "";
-$manufacturers = array();
 
-try {
-	$result = $dblink->query($sql);
-} catch (Exception $e) {
-	$responseData = create_header("ERROR", "Error with sql (fetching manufacturers): $e", "list_manufacturers", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
+if ($status == NULL) {
+	//show active devices by default
+	$sql = "SELECT `auto_id`, `manufacturer` FROM `manufacturers` WHERE `status` = 'ACTIVE'";
+} elseif (strcmp($status, "both") === 0) {
+	$sql = "SELECT `auto_id`, `manufacturer` FROM `manufacturers` 
+			WHERE `status` = 'ACTIVE'
+				OR `status` = 'INACTIVE'";
 }
 
-$rows_found = $result->num_rows;
-if ($rows_found > 0)
+
+if (!empty($sql)) 
 {
-   while ( $data = $result->fetch_array( MYSQLI_ASSOC ) ) {
-  		$manufacturers[ $data[ 'auto_id' ] ] = $data[ 'manufacturer' ];
+	try {
+		$result = $dblink->query($sql);
+	} catch (Exception $e) {
+		$responseData = create_header("ERROR", "Error with sql (fetching manufacturers): $e", "list_manufacturers", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
 	}
-	$jsonManufacturers = json_encode($manufacturers);
-	$responseData = create_header("Success", $jsonManufacturers, "list_manufacturers", "");
-	log_activity($dblink, $responseData);
-	echo $responseData;
-	die();
-} else {
-    $responseData = create_header("ERROR", "No results found", "list_manufacturers", "");
-    log_activity($dblink, $responseData);
-    echo $responseData;
-    die();
+
+	$rows_found = $result->num_rows;
+	if ($rows_found > 0)
+	{
+	   $manufacturers = array();
+	   while ( $data = $result->fetch_array( MYSQLI_ASSOC ) ) {
+			$manufacturers[ $data[ 'auto_id' ] ] = $data[ 'manufacturer' ];
+		}
+		$jsonManufacturers = json_encode($manufacturers);
+		$responseData = create_header("Success", $jsonManufacturers, "list_manufacturers", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	} else {
+		$responseData = create_header("ERROR", "No results found", "list_manufacturers", "");
+		log_activity($dblink, $responseData);
+		echo $responseData;
+		die();
+	}
 }
 
-$responseData = create_header("ERROR", "Unknown Error occured", "list_manufacturers", "");
+$responseData = create_header("ERROR", "Invalid Status / Unknown Error occurred", "list_manufacturers", "");
 log_activity($dblink, $responseData);
 echo $responseData;
 die();
